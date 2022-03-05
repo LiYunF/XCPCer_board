@@ -102,5 +102,3 @@ func getNCContestPersonalMainPage(ctx context.Context, nowCoderId string, keyWor
 func GetNCContestRating(ctx context.Context, nowCoderId string) (int, error) {
 	return getNCContestPersonalMainPage(ctx, nowCoderId, MainRatingKeyWord)
 }
-
-
