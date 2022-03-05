@@ -1,6 +1,6 @@
 module XCPCer_board
 
-go 1.16
+go 1.17
 
 require (
 	github.com/FengZhg/go_tools/errs v0.0.0-20220305104404-b9fa93d90a28
