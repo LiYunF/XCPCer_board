@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/FengZhg/gin_middleware"
+	"github.com/FengZhg/go_tools/gin_middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os/exec"

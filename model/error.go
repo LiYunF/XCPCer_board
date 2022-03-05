@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/FengZhg/errs"
+	"github.com/FengZhg/go_tools/errs"
 )
 
 const (
