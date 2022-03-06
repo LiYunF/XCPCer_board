@@ -23,7 +23,7 @@ type goQueryFinderReturn struct {
 
 // 由于需要手动关闭http client的body进行连接复用 使用回调函数的方式，保证可以关闭读响应的流
 //doHTTPGetAndGoQuery 进行http请求和html解析
-func doHTTPGetAndGoQuery(ctx context.Context, url string, finders ...goQueryFinder) ([]*goQueryFinderReturn, error) {
+func doHTTPGetAndGoQuery(ctx context.Context, url string, finders ...*goQueryFinder) ([]*goQueryFinderReturn, error) {
 
 	// 请求阶段，并完成请求相应状态错误判断
 	res, err := util.SendHTTPGet(ctx, url)
@@ -49,7 +49,7 @@ func doHTTPGetAndGoQuery(ctx context.Context, url string, finders ...goQueryFind
 	for ind, finder := range finders {
 		wg.Add(1)
 		// 并发执行回调函数
-		go func(idx int, f goQueryFinder) {
+		go func(idx int, f *goQueryFinder) {
 			defer wg.Done()
 			rets[idx] = &goQueryFinderReturn{
 				key:   finder.findKey,
@@ -58,5 +58,7 @@ func doHTTPGetAndGoQuery(ctx context.Context, url string, finders ...goQueryFind
 		}(ind, finder)
 	}
 
+	// 等待执行结束
+	wg.Wait()
 	return rets, nil
 }
