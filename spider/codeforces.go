@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
+	"strings"
 )
 
 //---------------------------------------------------------------------//
@@ -23,7 +24,7 @@ const (
 	codeforcesMainRatingKey = "CodeForces_Main_Rating"
 
 	// 个人历史最高rating
-	codeforcesMainMaxRatingKey = "CodeForces_Main_Max_Rating"
+	codeforcesMaxMainRatingKey = "CodeForces_Main_Max_Rating"
 )
 
 // CF finder关键词
@@ -35,10 +36,10 @@ const (
 	codeforcesLastMonthPracticePassAmountKeyWord = "month"
 
 	// 个人rating
-	codeforcesMainRatingKeyWord = "CodeForces_Main_Rating"
+	codeforcesMainRatingKeyWord = "rating"
 
 	// 个人历史最高rating
-	codeforcesMainMaxRatingKeyWord = "CodeForces_Main_Rating"
+	codeforcesMaxMainRatingKeyWord = "(max."
 )
 
 //---------------------------------------------------------------------//
@@ -70,11 +71,6 @@ func getCFContestPersonalPracticePage(ctx context.Context, codeForcesId string) 
 	return goQueryFinderRets, nil
 }
 
-//GetCFContestPassAmount 获取Codeforces信息
-func GetCFContestPassAmount(ctx context.Context, codeForcesId string) ([]*goQueryFinderReturn, error) {
-	return getCFContestPersonalPracticePage(ctx, codeForcesId)
-}
-
 //codeforcesPersonalMainPageFinderList 需要抓取的个人主页信息finder列表
 var codeforcesPersonalMainPageFinderList = []*goQueryFinder{
 	&goQueryFinder{ //获取过题数
@@ -85,36 +81,51 @@ var codeforcesPersonalMainPageFinderList = []*goQueryFinder{
 		findKey:     codeforcesLastMonthPracticePassAmount,
 		findHandler: codeforcesPracticePassLastMonthAmountHandler,
 	},
-	//&goQueryFinder{
-	//	findKey:     codeforcesMainRatingKey,
-	//	findHandler: codeforcesMainRatingHandler,
-	//},
+	&goQueryFinder{ //rating
+		findKey:     codeforcesMainRatingKey,
+		findHandler: codeforcesMainRatingHandler,
+	},
+	&goQueryFinder{ //最高rating
+		findKey:     codeforcesMaxMainRatingKey,
+		findHandler: codeforcesMaxMainRatingHandler,
+	},
 }
 
 func codeforcesPracticePassAmountHandler(doc *goquery.Document) string {
 
-	retStr := doc.Find(fmt.Sprint("#body div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame" +
-		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer" +
-		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(" +
-		codeforcesPracticePassAmountKeyWord + ") ._UserActivityFrame_counterValue")).First().Text()
-	return retStr[:len(retStr)-9]
+	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame"+
+		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer"+
+		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(%v)"+
+		" ._UserActivityFrame_counterValue", codeforcesPracticePassAmountKeyWord)).First().Text()
+	return strings.Split(retStr, " ")[0]
 	//"1000 problems" -> "1000"
 }
 func codeforcesPracticePassLastMonthAmountHandler(doc *goquery.Document) string {
 
-	retStr := doc.Find(fmt.Sprint("#body div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame" +
-		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer" +
-		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(" +
-		codeforcesLastMonthPracticePassAmountKeyWord + ") ._UserActivityFrame_counterValue")).First().Text()
-	return retStr[:len(retStr)-9]
-	//"1000 problems" -> "1000"
+	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame"+
+		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer"+
+		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(%v)"+
+		" ._UserActivityFrame_counterValue", codeforcesLastMonthPracticePassAmountKeyWord)).First().Text()
+	return strings.Split(retStr, " ")[0]
 }
 func codeforcesMainRatingHandler(doc *goquery.Document) string {
 
-	retStr := doc.Find(fmt.Sprint("#body div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame" +
-		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer" +
-		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(" +
-		codeforcesMainRatingKeyWord + ") ._UserActivityFrame_counterValue")).First().Text()
-	return retStr[:len(retStr)-9]
-	//"1000 problems" -> "1000"
+	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent "+
+		"div[style=\"padding:1em 1em 0 1em;\"] .userbox .info ul li:contains(%v)"+
+		" span[style]", //有style的<span>是我们想要的
+		codeforcesMainRatingKeyWord)).First().Text()
+	return strings.Split(retStr, " ")[0]
+}
+func codeforcesMaxMainRatingHandler(doc *goquery.Document) string {
+
+	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent "+
+		"div[style=\"padding:1em 1em 0 1em;\"] .userbox .info ul li:contains(%v)"+
+		" .smaller span[class=\"user-legendary\"]+span",
+		codeforcesMainRatingKeyWord)).First().Text()
+	return strings.Split(retStr, " ")[0]
+}
+
+//GetCFContestPassAmount 获取Codeforces信息
+func GetCFContestPassAmount(ctx context.Context, codeForcesId string) ([]*goQueryFinderReturn, error) {
+	return getCFContestPersonalPracticePage(ctx, codeForcesId)
 }
