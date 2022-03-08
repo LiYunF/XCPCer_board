@@ -22,3 +22,6 @@
 ### LiYunF
 
 -2022.3.7 实现Codeforces爬虫个人历史过题量、上周过题量
+
+-2022.3.8 实现Codeforces爬虫个人rating、个人历史最高rating
+
