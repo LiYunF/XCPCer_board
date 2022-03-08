@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/FengZhg/logrus_gin_log"
+	_ "github.com/FengZhg/go_tools/logrus_gin_log"
 )
 
 // 主入口函数

@@ -1,21 +1,36 @@
 package spider
 
 import (
-	"XCPCer_board/util"
 	"context"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
-	"strconv"
 )
 
+//---------------------------------------------------------------------//
+// 牛客竞赛区个人信息爬取 //
+//---------------------------------------------------------------------//
+// 牛客finder存储Key
 const (
-	PracticePassAmountKeyWord = "题已通过"
+	// 个人练习页面
+	practicePassAmountKey = "NowCoder_Practice_PassAmount"
 
-	MainRatingKeyWord = "Rating"
+	// 个人主页
+	mainRatingKey              = "NowCoder_Main_Rating"
+	mainRatingRatingKey        = "NowCoder_Main_RatingRanking"
+	mainAttendContestAmountKey = "NowCoder_Main_AttendContestAmount"
 )
 
-// 处理goquery匹配的回调函数
-type goQueryFindHandler func(*goquery.Document) string
+// 牛客finder关键词
+const (
+	// 个人练习页面
+	practicePassAmountKeyWord = "题已通过"
+
+	// 个人主页
+	mainRatingKeyWord              = "Rating"
+	mainRatingRankingKeyWord       = "Rating排名"
+	mainAttendContestAmountKeyWord = "次比赛"
+)
 
 //getNowCoderContestProfileBaseUrl 获取牛客竞赛区个人主页URL
 func getNowCoderContestProfileBaseUrl(nowCoderId string) string {
@@ -27,80 +42,87 @@ func getNowCoderContestProfilePracticeUrl(nowCoderId string) string {
 	return getNowCoderContestProfileBaseUrl(nowCoderId) + "/practice-coding"
 }
 
-// 由于需要手动关闭http client的body进行连接复用 使用回调函数的方式，保证可以关闭读响应的流
-//doHTTPGetAndGoQuery 进行http请求和html解析
-func doHTTPGetAndGoQuery(ctx context.Context, url string, findHandler goQueryFindHandler) (string, error) {
-
-	// 请求阶段，并完成请求相应状态错误判断
-	res, err := util.SendHTTPGet(ctx, url)
-	if err != nil {
-		log.Errorf("HTTP Get Error err = %v", err)
-		return "", err
-	}
-
-	// 关闭io读，方便连接复用
-	defer res.Body.Close()
-
-	//解析html阶段
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Errorf("GoQuery Pharse HTML Error err = %v", err)
-		return "", err
-	}
-
-	return findHandler(doc), nil
+//getNowCoderContestBaseFindRule 获取牛客竞赛区基础的
+func getNowCoderContestBaseFindRule(keyWord string) string {
+	return fmt.Sprintf(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix "+
+		".my-state-main .my-state-item:contains(%v) .state-num", keyWord)
 }
 
 //---------------------------------------------------------------------//
 // 个人练习信息获取
 //---------------------------------------------------------------------//
 
-//getNCContestPersonalPracticePage 牛客竞赛区获取个人练习页面信息
-func getNCContestPersonalPracticePage(ctx context.Context, nowCoderId string, keyWord string) (int, error) {
-
-	infoStr, err := doHTTPGetAndGoQuery(ctx, getNowCoderContestProfilePracticeUrl(nowCoderId),
-		func(doc *goquery.Document) string {
-			//解析个人状态行
-			return doc.Find(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix ." +
-				"my-state-main .my-state-item:contains(" + keyWord + ") .state-num").Text()
-		})
-	if err != nil {
-		log.Errorf("getNCContestPersonalPracticePage doHTTPGetAndGoQuery Error err = %v", err)
-		return 0, err
-	}
-
-	return strconv.Atoi(infoStr)
+//personalPracticePageFinderList 需要抓取的个人练习页面finder列表
+var personalPracticePageFinderList = []*goQueryFinder{
+	&goQueryFinder{
+		findKey:     practicePassAmountKey,
+		findHandler: passAmountHandler,
+	},
 }
 
-//GetNCContestPassAmount 获取牛客竞赛区过题数
-func GetNCContestPassAmount(ctx context.Context, nowCoderId string) (int, error) {
-	return getNCContestPersonalPracticePage(ctx, nowCoderId, PracticePassAmountKeyWord)
+//passAmountHandler 获取竞赛区题目通过数量handler
+func passAmountHandler(doc *goquery.Document) string {
+	return doc.Find(getNowCoderContestBaseFindRule(practicePassAmountKeyWord)).First().Text()
+}
+
+//getNCContestPersonalPracticePage 牛客竞赛区获取个人练习页面信息
+func getNCContestPersonalPracticePage(ctx context.Context, nowCoderId string) ([]*goQueryFinderReturn, error) {
+
+	goQueryFinderRets, err := doHTTPGetAndGoQuery(ctx, getNowCoderContestProfilePracticeUrl(nowCoderId),
+		personalPracticePageFinderList...)
+	if err != nil {
+		log.Errorf("getNCContestPersonalPracticePage doHTTPGetAndGoQuery Error err = %v", err)
+		return nil, err
+	}
+
+	return goQueryFinderRets, nil
 }
 
 //---------------------------------------------------------------------//
 // 个人主页信息获取
 //---------------------------------------------------------------------//
 
-//getNCContestPersonalMainPage 牛客竞赛区获取个人主页信息
-func getNCContestPersonalMainPage(ctx context.Context, nowCoderId string, keyWord string) (int, error) {
+//personalMainPageFinderList 需要抓取的个人主页信息finder列表
+var personalMainPageFinderList = []*goQueryFinder{
+	&goQueryFinder{
+		findKey:     mainRatingKey,
+		findHandler: ratingHandler,
+	},
+	&goQueryFinder{
+		findKey:     mainRatingRatingKey,
+		findHandler: ratingRankingHandler,
+	},
+	&goQueryFinder{
+		findKey:     mainAttendContestAmountKey,
+		findHandler: attendContestAmountHandler,
+	},
+}
 
-	infoStr, err := doHTTPGetAndGoQuery(ctx, getNowCoderContestProfileBaseUrl(nowCoderId),
-		func(doc *goquery.Document) string {
-			//解析个人状态行
-			return doc.Find(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix " +
-				".my-state-main .my-state-item:contains(" + keyWord + ") .state-num").Text()
-		})
+//getNCContestPersonalMainPage 牛客竞赛区获取个人主页信息
+func getNCContestPersonalMainPage(ctx context.Context, nowCoderId string, keyWord string) ([]*goQueryFinderReturn, error) {
+
+	goQueryFinderRets, err := doHTTPGetAndGoQuery(ctx, getNowCoderContestProfileBaseUrl(nowCoderId),
+		personalMainPageFinderList...)
 	if err != nil {
 		log.Errorf("GetNCContestPersonalMainPage doHTTPGetAndGoQuery Error err = %v", err)
-		return 0, err
+		return nil, err
 	}
 
-	return strconv.Atoi(infoStr)
+	return goQueryFinderRets, nil
 }
 
-//GetNCContestRating 获取牛客竞赛区rating
-func GetNCContestRating(ctx context.Context, nowCoderId string) (int, error) {
-	return getNCContestPersonalMainPage(ctx, nowCoderId, MainRatingKeyWord)
+//ratingHandler 获取竞赛区Rating handler (需要的条件多一个比较特殊)
+func ratingHandler(doc *goquery.Document) string {
+	return doc.Find(fmt.Sprintf(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix "+
+		".my-state-main .my-state-item:contains(%v) .state-num.rate-score5", mainRatingKeyWord)).First().Text()
 }
 
+//ratingRankingHandler 获取竞赛区Rating排名handler
+func ratingRankingHandler(doc *goquery.Document) string {
+	return doc.Find(getNowCoderContestBaseFindRule(mainRatingRankingKeyWord)).First().Text()
+}
 
+//attendContestAmountHandler 获取竞赛区Rating排名handler
+func attendContestAmountHandler(doc *goquery.Document) string {
+	return doc.Find(getNowCoderContestBaseFindRule(mainAttendContestAmountKeyWord)).First().Text()
+}
