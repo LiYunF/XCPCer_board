@@ -52,7 +52,7 @@ func doHTTPGetAndGoQuery(ctx context.Context, url string, finders ...*goQueryFin
 		go func(idx int, f *goQueryFinder) {
 			defer wg.Done()
 			rets[idx] = &goQueryFinderReturn{
-				key:   finder.findKey,
+				key:   f.findKey,
 				value: f.findHandler(doc),
 			}
 		}(ind, finder)
