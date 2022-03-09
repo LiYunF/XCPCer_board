@@ -25,6 +25,9 @@ const (
 
 	// 个人历史最高rating
 	codeforcesMaxMainRatingKey = "CodeForces_Main_Max_Rating"
+
+	//当前rating所对应的等级（红名、紫名...)
+	codeforcesMainRatingNameKey = "CodeForces_Main_Rating_Name"
 )
 
 // CF finder关键词
@@ -39,7 +42,10 @@ const (
 	codeforcesMainRatingKeyWord = "rating"
 
 	// 个人历史最高rating
-	codeforcesMaxMainRatingKeyWord = "(max."
+	codeforcesMaxMainRatingKeyWord = "max"
+
+	//当前rating所对应的等级
+	//不需要finder关键词
 )
 
 //---------------------------------------------------------------------//
@@ -89,6 +95,10 @@ var codeforcesPersonalMainPageFinderList = []*goQueryFinder{
 		findKey:     codeforcesMaxMainRatingKey,
 		findHandler: codeforcesMaxMainRatingHandler,
 	},
+	&goQueryFinder{ //个人rating对应的等级
+		findKey:     codeforcesMainRatingNameKey,
+		findHandler: codeforcesMainRatingNameHandler,
+	},
 }
 
 func codeforcesPracticePassAmountHandler(doc *goquery.Document) string {
@@ -120,9 +130,15 @@ func codeforcesMaxMainRatingHandler(doc *goquery.Document) string {
 
 	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent "+
 		"div[style=\"padding:1em 1em 0 1em;\"] .userbox .info ul li:contains(%v)"+
-		" .smaller span[class=\"user-legendary\"]+span",
-		codeforcesMainRatingKeyWord)).First().Text()
+		" .smaller span+span", //选择他的邻居
+		codeforcesMaxMainRatingKeyWord)).First().Text()
 	return strings.Split(retStr, " ")[0]
+}
+func codeforcesMainRatingNameHandler(doc *goquery.Document) string {
+
+	retStr := doc.Find(fmt.Sprintf("#body div[style=\"position: relative;\"] #pageContent " +
+		"div[style=\"padding:1em 1em 0 1em;\"] .userbox .info .main-info .user-rank  span")).First().Text()
+	return retStr
 }
 
 //GetCFContestPassAmount 获取Codeforces信息
