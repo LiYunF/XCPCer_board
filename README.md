@@ -1,2 +1,3 @@
-# XCPCer_board
-一个用来监视学弟学妹们钉钉打卡情况、刷题量和Rating的榜单
+# XCPCer_board 开发
+- 一个展示注册用户刷题量和Rating的榜单
+- 可接入钉钉打卡情况

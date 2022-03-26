@@ -22,11 +22,7 @@ func NewServer() *gin.Engine {
 	engine.Use(gin_middleware.TimeoutMiddleware())
 	//engine.Use(util.AuthMiddleware())
 
-	// 不校验登录态的接口 只有ldap登陆的时候没有中间件，在model文件中进行区分
-
-
 	// 校验登录态的接口
-
 
 	engine.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, "Server Started")

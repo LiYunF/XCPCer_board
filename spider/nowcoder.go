@@ -99,7 +99,7 @@ var personalMainPageFinderList = []*goQueryFinder{
 }
 
 //getNCContestPersonalMainPage 牛客竞赛区获取个人主页信息
-func getNCContestPersonalMainPage(ctx context.Context, nowCoderId string, keyWord string) ([]*goQueryFinderReturn, error) {
+func getNCContestPersonalMainPage(ctx context.Context, nowCoderId string) ([]*goQueryFinderReturn, error) {
 
 	goQueryFinderRets, err := doHTTPGetAndGoQuery(ctx, getNowCoderContestProfileBaseUrl(nowCoderId),
 		personalMainPageFinderList...)
