@@ -7,9 +7,11 @@ import (
 const (
 	errorHTTPResponseStatus = 259001
 	errorScrapeTimeout      = 259002
+	errorScrapeCallType     = 259003
 )
 
 var (
 	HTTPResponseStatusError = errs.NewError(errorHTTPResponseStatus, "HTTP请求相应状态错误")
 	ScrapeTimeoutError      = errs.NewError(errorScrapeTimeout, "处理调度超时")
+	ScrapeCallTypeError     = errs.NewError(errorScrapeCallType, "scrape类型错误")
 )
