@@ -10,19 +10,19 @@ import (
 // @Author: Feng
 // @Date: 2022/4/7 15:44
 
-//scraper colly封装
-type scraper[V any] struct {
+//Scraper colly封装
+type Scraper[V any] struct {
 	c  *colly.Collector
 	cb func(collector *colly.Collector, ch chan V)
-	ch chan Request[V]
+	ch chan request[V]
 }
 
 //参数丰富接口
-type scraperFunc[V any] func(*scraper[V])
+type scraperFunc[V any] func(*Scraper[V])
 
 //WithCallback 带上处理回调函数
 func WithCallback[V any](cb func(collector *colly.Collector, ch chan V)) scraperFunc[V] {
-	return func(s *scraper[V]) {
+	return func(s *Scraper[V]) {
 		s.cb = cb
 	}
 }
@@ -37,7 +37,7 @@ func defaultCallback[V any]() func(collector *colly.Collector, ch chan V) {
 	}
 }
 
-type Request[V any] struct {
+type request[V any] struct {
 	Url string
 	Ch  chan result[V]
 }
@@ -48,13 +48,13 @@ type result[V any] struct {
 }
 
 //NewScraper 构造Scraper
-func NewScraper[V any](opts ...scraperFunc[V]) (*scraper[V], error) {
-	s := scraper[V]{
+func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
+	s := Scraper[V]{
 		c: colly.NewCollector(
 			colly.Async(true),
 			colly.MaxDepth(1),
 		),
-		ch: make(chan Request[V]),
+		ch: make(chan request[V]),
 		cb: defaultCallback[V](),
 	}
 	for _, f := range opts {
@@ -70,7 +70,7 @@ func NewScraper[V any](opts ...scraperFunc[V]) (*scraper[V], error) {
 }
 
 //init 初始化
-func (s *scraper[V]) init() error {
+func (s *Scraper[V]) init() error {
 	// 初始化各种On
 	ch := make(chan V)
 	s.cb(s.c, ch)
@@ -87,10 +87,10 @@ func (s *scraper[V]) init() error {
 }
 
 //Scrape 爬
-func (s *scraper[V]) Scrape(url string) (V, error) {
+func (s *Scraper[V]) Scrape(url string) (V, error) {
 	var emptyV V
 	ch := make(chan result[V])
-	r := Request[V]{
+	r := request[V]{
 		Url: url,
 		Ch:  ch,
 	}
