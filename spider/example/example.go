@@ -28,7 +28,6 @@ func exampleCallback(c *colly.Collector, ch chan scraper.Result[int]) {
 		fmt.Println(string(res.Body))
 		ret := scraper.NewResultMap[int]()
 		ret.Set("len", len(res.Body))
-		ret.Err = nil
 		ch <- ret
 	})
 }
