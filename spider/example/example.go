@@ -22,12 +22,11 @@ func init() {
 	exampleScraper = e
 }
 
-func exampleCallback(c *colly.Collector, ch chan scraper.Result[int]) {
+func exampleCallback(c *colly.Collector, ch chan scraper.result[int]) {
 	c.OnScraped(func(res *colly.Response) {
 		fmt.Println(res.Request.URL)
 		fmt.Println(string(res.Body))
-		ret := scraper.NewResultMap[int]()
-		ret.Set("len", len(res.Body))
+		ret := scraper.NewResult("len", len(res.Body))
 		ch <- ret
 	})
 }

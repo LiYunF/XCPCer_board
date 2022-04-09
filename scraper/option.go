@@ -15,7 +15,7 @@ var s sync.RWMutex
 
 //Scraper colly封装
 type Scraper[V any] struct {
-	cb      func(collector *colly.Collector, ch chan Result[V])
+	cb      func(collector *colly.Collector, ch chan result[V])
 	ch      chan request[V]
 	threads uint32
 	timeout time.Duration
@@ -24,14 +24,14 @@ type Scraper[V any] struct {
 //request 传输的请求结构
 type request[V any] struct {
 	Url string
-	Ch  chan Result[V]
+	Ch  chan Results[V]
 }
 
 //参数丰富接口
 type scraperFunc[V any] func(*Scraper[V])
 
 //WithCallback 带上处理回调函数
-func WithCallback[V any](cb func(collector *colly.Collector, ch chan Result[V])) scraperFunc[V] {
+func WithCallback[V any](cb func(collector *colly.Collector, ch chan result[V])) scraperFunc[V] {
 	return func(s *Scraper[V]) {
 		s.cb = cb
 	}
@@ -55,12 +55,13 @@ func WithTimeout[V any](timeout time.Duration) scraperFunc[V] {
 }
 
 //defaultCallback 默认的处理回调函数
-func defaultCallback[V any]() func(collector *colly.Collector, ch chan Result[V]) {
-	return func(c *colly.Collector, ch chan Result[V]) {
+func defaultCallback[V any]() func(collector *colly.Collector, ch chan result[V]) {
+	return func(c *colly.Collector, ch chan result[V]) {
 		c.OnRequest(func(req *colly.Request) {
 			fmt.Println(req.URL)
 		})
-		ch <- Result[V]{}
+		var v V
+		ch <- NewResult[V]("key", v)
 	}
 }
 
@@ -91,9 +92,9 @@ func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
 func (s *Scraper[V]) init() error {
 	// 初始化各种On
 	for i := uint32(0); i < s.threads; i++ {
-		ch := make(chan Result[V])
+		ch := make(chan result[V])
 		c := colly.NewCollector(
-			colly.Async(true),
+			colly.Async(false),
 			colly.MaxDepth(1),
 		)
 		s.cb(c, ch)
@@ -104,11 +105,11 @@ func (s *Scraper[V]) init() error {
 }
 
 //newThread 启动一个监听者
-func (s *Scraper[V]) newThread(collector *colly.Collector, ch chan Result[V]) {
+func (s *Scraper[V]) newThread(collector *colly.Collector, ch chan result[V]) {
 	for p := range s.ch {
 		err := collector.Visit(p.Url)
 		// 阻塞等待返回结果
-		ret := Result[V]{}
+		ret := Results[V]{}
 		select {
 		case ret = <-ch:
 			break
@@ -117,7 +118,7 @@ func (s *Scraper[V]) newThread(collector *colly.Collector, ch chan Result[V]) {
 		}
 		// 错误判断
 		if err != nil {
-			ret.SetError(err)
+			ret.err = err
 		}
 		p.Ch <- ret
 	}

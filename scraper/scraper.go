@@ -10,7 +10,7 @@ import (
 
 //Scrape 爬
 func (s *Scraper[V]) Scrape(url string) (map[string]V, error) {
-	ch := make(chan Result[V])
+	ch := make(chan Results[V])
 	r := request[V]{
 		Url: url,
 		Ch:  ch,
@@ -19,7 +19,7 @@ func (s *Scraper[V]) Scrape(url string) (map[string]V, error) {
 	s.ch <- r
 	select {
 	case ret := <-ch:
-		return ret.getMap(), ret.getError()
+		return ret.GetMp(), ret.GetErr()
 	case <-time.After(s.timeout):
 		return nil, model.ScrapeTimeoutError
 	}
