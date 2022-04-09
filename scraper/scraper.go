@@ -19,8 +19,8 @@ func (s *Scraper[V]) Scrape(url string) (map[string]V, error) {
 	s.ch <- r
 	select {
 	case ret := <-ch:
-		return ret.mp, ret.Err
-	case <-time.After(5 * time.Second):
+		return ret.getMap(), ret.getError()
+	case <-time.After(s.timeout):
 		return nil, model.ScrapeTimeoutError
 	}
 }

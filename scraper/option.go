@@ -1,9 +1,11 @@
 package scraper
 
 import (
+	"XCPCer_board/model"
 	"fmt"
 	"github.com/gocolly/colly"
 	"sync"
+	"time"
 )
 
 // @Author: Feng
@@ -16,6 +18,7 @@ type Scraper[V any] struct {
 	cb      func(collector *colly.Collector, ch chan Result[V])
 	ch      chan request[V]
 	threads uint32
+	timeout time.Duration
 }
 
 //request 传输的请求结构
@@ -41,6 +44,16 @@ func WithThreads[V any](threads uint32) scraperFunc[V] {
 	}
 }
 
+//WithTimeout 带上并发处理的超时时间
+func WithTimeout[V any](timeout time.Duration) scraperFunc[V] {
+	if timeout < time.Second {
+		timeout = time.Second
+	}
+	return func(s *Scraper[V]) {
+		s.timeout = timeout
+	}
+}
+
 //defaultCallback 默认的处理回调函数
 func defaultCallback[V any]() func(collector *colly.Collector, ch chan Result[V]) {
 	return func(c *colly.Collector, ch chan Result[V]) {
@@ -55,6 +68,7 @@ func defaultCallback[V any]() func(collector *colly.Collector, ch chan Result[V]
 func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
 	// 默认参数
 	s := Scraper[V]{
+		timeout: 5 * time.Second,
 		threads: 1,
 		ch:      make(chan request[V]),
 		cb:      defaultCallback[V](),
@@ -70,7 +84,7 @@ func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
 	if err != nil {
 		return nil, err
 	}
-	return &s, err
+	return &s, nil
 }
 
 //init 初始化
@@ -84,7 +98,27 @@ func (s *Scraper[V]) init() error {
 		)
 		s.cb(c, ch)
 		// 开始监听
-		go s.startListen(c, ch)
+		go s.newThread(c, ch)
 	}
 	return nil
+}
+
+//newThread 启动一个监听者
+func (s *Scraper[V]) newThread(collector *colly.Collector, ch chan Result[V]) {
+	for p := range s.ch {
+		err := collector.Visit(p.Url)
+		// 阻塞等待返回结果
+		ret := Result[V]{}
+		select {
+		case ret = <-ch:
+			break
+		case <-time.After(s.timeout):
+			err = model.ScrapeTimeoutError
+		}
+		// 错误判断
+		if err != nil {
+			ret.SetError(err)
+		}
+		p.Ch <- ret
+	}
 }
