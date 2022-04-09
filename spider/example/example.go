@@ -26,15 +26,18 @@ func exampleCallback(c *colly.Collector, ch chan scraper.Result[int]) {
 	c.OnScraped(func(res *colly.Response) {
 		fmt.Println(res.Request.URL)
 		fmt.Println(string(res.Body))
-		ch <- scraper.Result[int]{len(res.Body), nil}
+		ret := scraper.NewResultMap[int]()
+		ret.Set("len", len(res.Body))
+		ret.Err = nil
+		ch <- ret
 	})
 }
 
-func Scrape(uid string) (int, error) {
+func Scrape(uid string) (map[string]int, error) {
 	d, err := exampleScraper.Scrape("https://cn.bing.com")
 	if err != nil {
 		log.Errorf("Example Error %v", err)
-		return 0, err
+		return nil, err
 	}
 	return d, nil
 }

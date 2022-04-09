@@ -25,6 +25,6 @@ func (s *Scraper[V]) startListen(collector *colly.Collector, ch chan Result[V]) 
 		if err != nil {
 			ret.Err = err
 		}
-		p.Ch <- Result[V]{Value: ret.Value, err: ret.Err}
+		p.Ch <- ret
 	}
 }

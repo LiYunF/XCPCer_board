@@ -9,8 +9,7 @@ import (
 // @Date: 2022/4/7 15:44
 
 //Scrape 爬
-func (s *Scraper[V]) Scrape(url string) (V, error) {
-	var emptyV V
+func (s *Scraper[V]) Scrape(url string) (map[string]V, error) {
 	ch := make(chan Result[V])
 	r := request[V]{
 		Url: url,
@@ -20,8 +19,8 @@ func (s *Scraper[V]) Scrape(url string) (V, error) {
 	s.ch <- r
 	select {
 	case ret := <-ch:
-		return ret.Value, ret.Err
+		return ret.mp, ret.Err
 	case <-time.After(5 * time.Second):
-		return emptyV, model.ScrapeTimeoutError
+		return nil, model.ScrapeTimeoutError
 	}
 }

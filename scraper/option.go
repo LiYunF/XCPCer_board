@@ -24,12 +24,6 @@ type request[V any] struct {
 	Ch  chan Result[V]
 }
 
-//Result 传输的结果结构
-type Result[V any] struct {
-	V
-	Err error
-}
-
 //参数丰富接口
 type scraperFunc[V any] func(*Scraper[V])
 
@@ -53,8 +47,7 @@ func defaultCallback[V any]() func(collector *colly.Collector, ch chan Result[V]
 		c.OnRequest(func(req *colly.Request) {
 			fmt.Println(req.URL)
 		})
-		var v V
-		ch <- Result[V]{v, nil}
+		ch <- Result[V]{}
 	}
 }
 
