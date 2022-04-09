@@ -68,6 +68,7 @@ func defaultCallback[V any]() func(collector *colly.Collector, ch chan Result[V]
 func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
 	// 默认参数
 	s := Scraper[V]{
+		timeout: 5 * time.Second,
 		threads: 1,
 		ch:      make(chan request[V]),
 		cb:      defaultCallback[V](),
