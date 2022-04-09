@@ -48,14 +48,14 @@ func (r *Result[V]) SetError(err error) {
 	r.err = err
 }
 
-//getError 获取错误
+//getError 内部解构方法：获取错误
 func (r *Result[V]) getError() error {
 	r.errMutex.RLock()
 	defer r.errMutex.RUnlock()
 	return r.err
 }
 
-//getError 获取错误
+//getMap 内部解构方法：获取map
 func (r *Result[V]) getMap() map[string]V {
 	return r.mp
 }
