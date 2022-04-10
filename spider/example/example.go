@@ -2,9 +2,7 @@ package example
 
 import (
 	"XCPCer_board/scraper"
-	"fmt"
 	"github.com/gocolly/colly"
-	log "github.com/sirupsen/logrus"
 )
 
 // @Author: Feng
@@ -13,29 +11,30 @@ import (
 var exampleScraper *scraper.Scraper[int]
 
 func init() {
-	e, err := scraper.NewScraper[int](
+	var err error
+	exampleScraper, err = scraper.NewScraper[int](
 		scraper.WithCallback(exampleCallback),
 	)
 	if err != nil {
 		panic(err)
 	}
-	exampleScraper = e
 }
 
-func exampleCallback(c *colly.Collector, ch chan scraper.Result[int]) {
-	c.OnScraped(func(res *colly.Response) {
-		fmt.Println(res.Request.URL)
-		fmt.Println(string(res.Body))
-		ret := scraper.NewResultMap[int]()
-		ret.Set("len", len(res.Body))
-		ch <- ret
+func exampleCallback(c *colly.Collector, res *scraper.Results[int]) {
+	c.OnRequest(func(r *colly.Request) {
+		//fmt.Println(r.URL)
+		res.Set("Default Callback 1", 1)
+	})
+	c.OnScraped(func(r *colly.Response) {
+		//fmt.Println(string(r.Body))
+		res.Set("Default Callback 2", 2)
+		//res.SetError(errs.NewError(0, "Test Error"))
 	})
 }
 
 func Scrape(uid string) (map[string]int, error) {
 	d, err := exampleScraper.Scrape("https://cn.bing.com")
 	if err != nil {
-		log.Errorf("Example Error %v", err)
 		return nil, err
 	}
 	return d, nil

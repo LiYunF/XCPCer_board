@@ -9,4 +9,5 @@ import (
 // 主入口函数
 func main() {
 	fmt.Println(example.Scrape("10086"))
+	fmt.Println(example.Scrape("10086"))
 }

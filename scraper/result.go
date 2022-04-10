@@ -1,61 +1,56 @@
 package scraper
 
-import (
-	"sync"
-)
+import "sync"
 
 // @Author: Feng
 // @Date: 2022/4/8 22:03
 
-//Result 传输的结果结构
-type Result[V any] struct {
-	mpMutex  sync.RWMutex
-	errMutex sync.RWMutex
-	mp       map[string]V
-	err      error
+//Results 结果集
+type Results[V any] struct {
+	m   sync.Mutex
+	mp  map[string]V
+	err error
 }
 
-func NewResultMap[V any]() Result[V] {
-	return Result[V]{
-		mpMutex:  sync.RWMutex{},
-		errMutex: sync.RWMutex{},
-		mp:       map[string]V{},
+func NewResults[V any]() *Results[V] {
+	return &Results[V]{
+		m:  sync.Mutex{},
+		mp: make(map[string]V),
 	}
 }
 
-//Get 获取结果
-func (r *Result[V]) Get(key string) V {
-	r.mpMutex.RLock()
-	defer r.mpMutex.RUnlock()
-	v := r.mp[key]
-	return v
+//init 使用后重新初始化结果集
+func (r *Results[V]) init() {
+	r.mp = make(map[string]V)
+	r.err = nil
 }
 
-//Set 设置结果
-func (r *Result[V]) Set(key string, value V) {
-	r.mpMutex.Lock()
-	defer r.mpMutex.Unlock()
+//GetMp 获取结果集中的map
+func (r *Results[V]) GetMp() map[string]V {
+	if r == nil {
+		return nil
+	}
+	return r.mp
+}
+
+//GetErr 获取结果集中的error
+func (r *Results[V]) GetErr() error {
+	if r == nil {
+		return nil
+	}
+	return r.err
+}
+
+//Set 设置值
+func (r *Results[V]) Set(key string, value V) {
+	r.m.Lock()
+	defer r.m.Unlock()
 	r.mp[key] = value
 }
 
 //SetError 设置错误
-func (r *Result[V]) SetError(err error) {
-	if err == nil {
-		return
-	}
-	r.errMutex.Lock()
-	defer r.errMutex.Unlock()
+func (r *Results[V]) SetError(err error) {
+	r.m.Lock()
+	defer r.m.Unlock()
 	r.err = err
-}
-
-//getError 内部解构方法：获取错误
-func (r *Result[V]) getError() error {
-	r.errMutex.RLock()
-	defer r.errMutex.RUnlock()
-	return r.err
-}
-
-//getMap 内部解构方法：获取map
-func (r *Result[V]) getMap() map[string]V {
-	return r.mp
 }
