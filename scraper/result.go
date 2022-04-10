@@ -1,29 +1,28 @@
 package scraper
 
+import "sync"
+
 // @Author: Feng
 // @Date: 2022/4/8 22:03
 
-//result 传输的结果结构
-type result[V any] struct {
-	Key   string
-	Value V
-	Err   error
-}
-
-//NewResult 正常返回
-func NewResult[V any](key string, value V) result[V] {
-	return result[V]{Key: key, Value: value}
-}
-
-//NewResultWithErr 错误返回
-func NewResultWithErr[V any](err error) result[V] {
-	return result[V]{Err: err}
-}
-
 //Results 结果集
 type Results[V any] struct {
+	m   sync.Mutex
 	mp  map[string]V
 	err error
+}
+
+func NewResults[V any]() *Results[V] {
+	return &Results[V]{
+		m:  sync.Mutex{},
+		mp: make(map[string]V),
+	}
+}
+
+//init 使用后重新初始化结果集
+func (r *Results[V]) init() {
+	r.mp = make(map[string]V)
+	r.err = nil
 }
 
 //GetMp 获取结果集中的map
@@ -40,4 +39,18 @@ func (r *Results[V]) GetErr() error {
 		return nil
 	}
 	return r.err
+}
+
+//Set 设置值
+func (r *Results[V]) Set(key string, value V) {
+	r.m.Lock()
+	defer r.m.Unlock()
+	r.mp[key] = value
+}
+
+//SetError 设置错误
+func (r *Results[V]) SetError(err error) {
+	r.m.Lock()
+	defer r.m.Unlock()
+	r.err = err
 }
