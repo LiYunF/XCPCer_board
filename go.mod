@@ -6,15 +6,16 @@ require (
 	github.com/FengZhg/go_tools/errs v0.0.0-20220404114844-445c7e1acc48
 	github.com/FengZhg/go_tools/gin_logrus v0.0.0-20220404114844-445c7e1acc48
 	github.com/FengZhg/go_tools/gin_middleware v0.0.0-20220305104404-b9fa93d90a28
+	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/gocolly/colly v1.2.0
+	github.com/imdario/mergo v0.3.12
 	github.com/sirupsen/logrus v1.8.1
 )
 
 require (
 	github.com/FengZhg/go_tools/protocol_go v0.0.0-20220305104133-56923c9cd358 // indirect
 	github.com/FengZhg/go_tools/utils v0.0.0-20220404114844-445c7e1acc48 // indirect
-	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.4 // indirect
 	github.com/antchfx/xmlquery v1.3.10 // indirect

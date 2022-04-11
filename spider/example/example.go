@@ -2,6 +2,7 @@ package example
 
 import (
 	"XCPCer_board/scraper"
+	"fmt"
 	"github.com/gocolly/colly"
 )
 
@@ -11,24 +12,20 @@ import (
 var exampleScraper *scraper.Scraper[int]
 
 func init() {
-	var err error
-	exampleScraper, err = scraper.NewScraper[int](
+	exampleScraper = scraper.NewScraper[int](
 		scraper.WithCallback(exampleCallback),
 	)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func exampleCallback(c *colly.Collector, res *scraper.Results[int]) {
 	c.OnRequest(func(r *colly.Request) {
 		//fmt.Println(r.URL)
 		res.Set("Default Callback 1", 1)
-	})
-	c.OnScraped(func(r *colly.Response) {
-		//fmt.Println(string(r.Body))
-		res.Set("Default Callback 2", 2)
 		//res.SetError(errs.NewError(0, "Test Error"))
+	})
+	c.OnHTML("", func(r *colly.HTMLElement) {
+		fmt.Println(r.DOM.First().Text())
+		res.Set("Default Callback 2", 2)
 	})
 }
 

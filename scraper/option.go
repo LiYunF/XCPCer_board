@@ -73,7 +73,7 @@ func defaultCallback[V any]() func(*colly.Collector, *Results[V]) {
 }
 
 //NewScraper 构造Scraper
-func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
+func NewScraper[V any](opts ...scraperFunc[V]) *Scraper[V] {
 	// 默认参数
 	s := Scraper[V]{
 		timeout: 5 * time.Second,
@@ -88,15 +88,12 @@ func NewScraper[V any](opts ...scraperFunc[V]) (*Scraper[V], error) {
 		}
 	}
 	// 初始化
-	err := s.init()
-	if err != nil {
-		return nil, err
-	}
-	return &s, nil
+	s.init()
+	return &s
 }
 
 //init 初始化
-func (s *Scraper[V]) init() error {
+func (s *Scraper[V]) init() {
 	// 初始化各种On
 	for i := uint32(0); i < s.threads; i++ {
 		res := NewResults[V]()
@@ -108,7 +105,6 @@ func (s *Scraper[V]) init() error {
 		// 初始化并开始监听
 		go s.newThread(c, res)
 	}
-	return nil
 }
 
 //newThread 启动一个监听者
