@@ -24,9 +24,8 @@ type Scraper[V any] struct {
 
 //request 传输的请求结构
 type request[V any] struct {
-	Url   string
-	Ch    chan map[string]V
-	ErrCh chan error
+	Url string
+	Ch  chan Results[V]
 }
 
 //参数丰富接口
@@ -131,12 +130,7 @@ func (s *Scraper[V]) newThread(collector *colly.Collector, res *Results[V]) {
 			res.SetError(model.ScrapeTimeoutError)
 		}
 		// 进行结果返回
-		switch {
-		case res.GetErr() != nil:
-			p.ErrCh <- res.GetErr()
-		default:
-			p.Ch <- res.GetMp()
-		}
+		p.Ch <- NewResultsWithMapAndError(res.GetMap(), res.GetError())
 		// 重新初始化结果集
 		res.init()
 	}

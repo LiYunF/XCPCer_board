@@ -19,22 +19,35 @@ func NewResults[V any]() *Results[V] {
 	}
 }
 
+func NewResultsWithError[V any](err error) Results[V] {
+	return Results[V]{
+		err: err,
+	}
+}
+
+func NewResultsWithMapAndError[V any](mp map[string]V, err error) Results[V] {
+	return Results[V]{
+		mp:  mp,
+		err: err,
+	}
+}
+
 //init 使用后重新初始化结果集
 func (r *Results[V]) init() {
 	r.mp = make(map[string]V)
 	r.err = nil
 }
 
-//GetMp 获取结果集中的map
-func (r *Results[V]) GetMp() map[string]V {
+//GetMap 获取结果集中的map
+func (r *Results[V]) GetMap() map[string]V {
 	if r == nil {
 		return nil
 	}
 	return r.mp
 }
 
-//GetErr 获取结果集中的error
-func (r *Results[V]) GetErr() error {
+//GetError 获取结果集中的error
+func (r *Results[V]) GetError() error {
 	if r == nil {
 		return nil
 	}
