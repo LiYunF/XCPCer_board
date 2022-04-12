@@ -26,10 +26,6 @@ func strCallback(c *colly.Collector, res *scraper.Results[string]) {
 	})
 }
 
-func GetStrMsg(uid string) (map[string]string, error) {
-	d, err := strScraper.Scrape(getPersonPage(uid))
-	if err != nil {
-		return nil, err
-	}
-	return d, nil
+func GetStrMsg(uid string) scraper.Results[string] {
+	return strScraper.Scrape(getPersonPage(uid))
 }
