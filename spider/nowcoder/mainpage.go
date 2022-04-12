@@ -36,13 +36,14 @@ var (
 func init() {
 	mainScraper = scraper.NewScraper[int](
 		scraper.WithCallback(mainCallback),
+		scraper.WithThreads[int](2),
 	)
 }
 
 //mainCallback 处理牛客个人主页的回调函数
 func mainCallback(c *colly.Collector, res *scraper.Results[int]) {
 	//用goquery
-	c.OnHTML("", func(element *colly.HTMLElement) {
+	c.OnHTML("html", func(element *colly.HTMLElement) {
 		res.Set(mainRatingKey, ratingHandler(element.DOM))
 		res.Set(mainRatingRatingKey, ratingRankingHandler(element.DOM))
 		res.Set(mainAttendContestAmountKey, attendContestAmountHandler(element.DOM))
@@ -88,6 +89,6 @@ func attendContestAmountHandler(doc *goquery.Selection) int {
 //-------------------------------------------------------------------------------------------//
 
 //FetchMainPage 抓取个人主页页面所有
-func FetchMainPage(uid string) (map[string]int, error) {
+func FetchMainPage(uid string) scraper.Results[int] {
 	return mainScraper.Scrape(getNowCoderContestProfileBaseUrl(uid))
 }
