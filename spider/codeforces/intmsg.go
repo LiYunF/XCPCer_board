@@ -16,6 +16,7 @@ var (
 func init() {
 	intScraper = scraper.NewScraper[int](
 		scraper.WithCallback(intCallback),
+		scraper.WithThreads[int](2),
 	)
 }
 
@@ -29,10 +30,6 @@ func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 	})
 }
 
-func GetIntMsg(uid string) (map[string]int, error) {
-	d, err := intScraper.Scrape(getPersonPage(uid))
-	if err != nil {
-		return nil, err
-	}
-	return d, nil
+func GetIntMsg(uid string) scraper.Results[int] {
+	return intScraper.Scrape(getPersonPage(uid))
 }

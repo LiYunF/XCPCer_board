@@ -1,32 +1,39 @@
 package codeforces
 
-import "github.com/imdario/mergo"
+import (
+	"XCPCer_board/scraper"
+)
 
 //ScrapeAll 获得所有结果
 func ScrapeAll(uid string) (map[string]int, error) {
-	res := map[string]int{}
-	mainRet, err := GetIntMsg(uid)
+	// 请求所有并合并所有
+	res, err := scraper.MergeAllResults[string, int](
+		GetIntMsg(uid),
+	)
 	if err != nil {
 		return nil, err
 	}
-	err = mergo.Merge(&res, mainRet)
-	if err != nil {
-		return nil, err
-	}
-
 	return res, nil
 }
+
 func ScrapeInt(uid string) (map[string]int, error) {
-	mainRet, err := GetIntMsg(uid)
+	// 请求所有并合并所有
+	res, err := scraper.MergeAllResults[string, int](
+		GetIntMsg(uid),
+	)
 	if err != nil {
 		return nil, err
 	}
-	return mainRet, nil
+	return res, nil
 }
+
 func ScrapeStr(uid string) (map[string]string, error) {
-	mainRet, err := GetStrMsg(uid)
+	// 请求所有并合并所有
+	res, err := scraper.MergeAllResults[string, string](
+		GetStrMsg(uid),
+	)
 	if err != nil {
 		return nil, err
 	}
-	return mainRet, nil
+	return res, nil
 }
