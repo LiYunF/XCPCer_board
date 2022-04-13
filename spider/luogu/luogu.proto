@@ -10,7 +10,7 @@ message UserShow {
 
 message currentData {
 	user                 user           = 2; // 用户信息
-	repeated passProblem passedProblems = 3; // 题目通过数
+	repeated passProblem passedProblems = 3; // 题目详情
 }
 
 message user {
