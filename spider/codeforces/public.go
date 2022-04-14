@@ -3,6 +3,7 @@ package codeforces
 import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 )
@@ -86,10 +87,12 @@ func codeforcesMainRatingNameHandler(doc *goquery.Selection) string {
 //转化int
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
-	if num, err := strconv.Atoi(ret); err == nil {
-		return num
+	num, err := strconv.Atoi(ret)
+	if err != nil {
+		log.Errorf("CF strToInt get err:%v\tand the return is %v:", num, err)
+		return -1
 	}
-	return -1
+	return num
 }
 func getPersonPage(uid string) string {
 	return "https://codeforces.com/profile/" + uid
