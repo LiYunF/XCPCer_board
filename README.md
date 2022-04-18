@@ -29,6 +29,5 @@
 
 - 2022.3.8 实现Codeforces爬取个人rating、个人历史最高rating
 
-- 2022.3.9 实现了Codeforces爬取个人rating对应的名称
-（例如rating在3000以上的名称为：legendary grandmaster）
-同时，完成了Codeforces模块的小规模单元测试
+- 2022.3.9 实现了Codeforces爬取个人rating对应的名称。同时完成了Codeforces模块的小规模单元测试
+- 2022.4.10~2022.4.14 利用colly框架，实现了codeforces、vj、luogu网站内容的爬取
