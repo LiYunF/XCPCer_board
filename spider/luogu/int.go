@@ -14,19 +14,19 @@ import (
 //---------------------------------------------------------------------//
 
 var (
-	intScraper *scraper.Scraper[int64]
+	intScraper *scraper.Scraper[int]
 	jsonData   UserShow
-	difficulty [5]int64
+	difficulty [5]int
 )
 
 func init() {
-	intScraper = scraper.NewScraper[int64](
+	intScraper = scraper.NewScraper[int](
 		scraper.WithCallback(intCallback),
-		scraper.WithThreads[int64](2),
+		scraper.WithThreads[int](2),
 	)
 }
 
-func intCallback(c *colly.Collector, res *scraper.Results[int64]) {
+func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 	c.OnHTML("head", func(e *colly.HTMLElement) {
 
 		//decoder
@@ -65,8 +65,8 @@ func intCallback(c *colly.Collector, res *scraper.Results[int64]) {
 		}
 
 		//set data
-		res.Set(luoGuPersonPassProblemNumber, user.GetPassedProblemCount())
-		res.Set(luoGuPersonRanting, user.GetRanking())
+		res.Set(luoGuPersonPassProblemNumber, int(user.GetPassedProblemCount()))
+		res.Set(luoGuPersonRanting, int(user.GetRanking()))
 		//set data of problem
 		res.Set(luoGuUnKnowProblemNumber, difficulty[0])
 		res.Set(luoGuSimpleProblemNumber, difficulty[1])
@@ -76,6 +76,6 @@ func intCallback(c *colly.Collector, res *scraper.Results[int64]) {
 	})
 }
 
-func GetStrMsg(uid string) scraper.Results[int64] {
+func GetStrMsg(uid string) scraper.Results[int] {
 	return intScraper.Scrape(getPersonPractice(uid))
 }
