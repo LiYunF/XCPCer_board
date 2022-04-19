@@ -10,8 +10,6 @@ import (
 // 主入口函数
 func main() {
 
+	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
 	fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
-	fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
-	fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
-
 }
