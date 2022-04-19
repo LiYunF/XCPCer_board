@@ -54,25 +54,45 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 //////////////////////////////////////
 /////		测试四大模块     //////////
 /////////////////////////////////////
+
 //测试codeforces
 func cfTest(t *testing.T) {
-	cfInt := map[string]int{
+
+	//基础设置
+	tp := "codeforces"
+	fc1 := codeforces.ScrapeAll
+	fc2 := codeforces.ScrapeStr
+	var uid string
+	var cfInt map[string]int
+	var cfStr map[string]string
+
+	//个例赋值
+	uid = model.TestCodeForcesIdLYF
+	cfInt = map[string]int{
 		"CodeForces_Last_Month_Practice_PassAmount": 0,
 		"CodeForces_Main_Max_Rating":                1837,
 		"CodeForces_Main_Rating":                    1742,
 		"CodeForces_Practice_PassAmount":            350,
 	}
-	cfStr := map[string]string{
+	cfStr = map[string]string{
 		"CodeForces_Main_Rating_Name": "Expert ",
 	}
-	uid := model.TestCodeForcesIdLYF
+
 	//开始测试
-	checkIntError(t, uid, "codeforces", codeforces.ScrapeAll, cfInt)
-	checkStrError(t, uid, "codeforces", codeforces.ScrapeStr, cfStr)
+	checkIntError(t, uid, tp, fc1, cfInt)
+	checkStrError(t, uid, tp, fc2, cfStr)
 
 }
 func luoGuTest(t *testing.T) {
-	lgInt := map[string]int{
+
+	tp := "luoGu"
+	fc1 := luogu.ScrapeAll
+	var uid string
+	var lgInt map[string]int
+
+	//输入个例
+	uid = model.TestLuoGuIdLYF
+	lgInt = map[string]int{
 		"luoGu_Basic_Problem_Number":       195,
 		"luoGu_Elevated_Problem_Number":    368,
 		"luoGu_Hard_Problem_Number":        1069,
@@ -81,33 +101,46 @@ func luoGuTest(t *testing.T) {
 		"luoGu_Simple_Problem_Number":      43,
 		"luoGu_UnKnow_Problem_Number":      68,
 	}
-	uid := model.TestLuoGuIdLYF
+
 	//开始测试
-	checkIntError(t, uid, "luoGu", luogu.ScrapeAll, lgInt)
+	checkIntError(t, uid, tp, fc1, lgInt)
 
 }
 func nowCoderTest(t *testing.T) {
-	ncInt := map[string]int{
+
+	tp := "nowCoder"
+	fc1 := nowcoder.ScrapeAll
+	var uid string
+	var ncInt map[string]int
+
+	//输入个例
+	uid = model.TestNowCoderIdLYF
+	ncInt = map[string]int{
 		"NowCoder_Main_AttendContestAmount": 23,
 		"NowCoder_Main_Rating":              -1,
 		"NowCoder_Main_RatingRanking":       -1,
 		"NowCoder_Practice_PassAmount":      39,
 	}
-	uid := model.TestNowCoderIdLYF
 	//开始测试
-	checkIntError(t, uid, "nowCoder", nowcoder.ScrapeAll, ncInt)
+	checkIntError(t, uid, tp, fc1, ncInt)
 
 }
 func vjTest(t *testing.T) {
-	vjInt := map[string]int{
+
+	tp := "vJudge"
+	fc1 := vjudge.ScrapeAll
+	var uid string
+	var vjInt map[string]int
+
+	uid = model.TestVJIdLYF
+	vjInt = map[string]int{
 		"vj_Person_Last_24_Hours_Pass_Number": 0,
 		"vj_Person_Last_30_Days_Pass_Number":  0,
 		"vj_Person_Last_7_Days_Pass_Number":   0,
 		"vj_Person_Pass_Number":               30,
 	}
-	uid := model.TestVJIdLYF
 	//开始测试
-	checkIntError(t, uid, "VJ", vjudge.ScrapeAll, vjInt)
+	checkIntError(t, uid, tp, fc1, vjInt)
 
 }
 
