@@ -97,3 +97,6 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 func getPersonPage(uid string) string {
 	return "https://codeforces.com/profile/" + uid
 }
+func getPersonProblemPage(uid string) string {
+	return "https://codeforces.com/profile/" + uid
+}

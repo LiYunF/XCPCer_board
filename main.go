@@ -2,7 +2,7 @@ package main
 
 import (
 	"XCPCer_board/model"
-	"XCPCer_board/spider/vjudge"
+	"XCPCer_board/spider/api/cf"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
@@ -11,5 +11,6 @@ import (
 func main() {
 
 	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
-	fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
+	//fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
+	fmt.Println(cf.ScrapeAll(model.TestCodeForcesIdLYF))
 }

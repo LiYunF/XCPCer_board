@@ -2,6 +2,7 @@ package cf
 
 import (
 	"XCPCer_board/scraper"
+	"fmt"
 	"github.com/gocolly/colly"
 )
 
@@ -21,9 +22,13 @@ func init() {
 }
 
 func intCallback(c *colly.Collector, res *scraper.Results[string]) {
-	c.OnHTML("#head", func(e *colly.HTMLElement) {
-		//fmt.Println(r.DOM.First().Text())
+	c.OnHTML("*", func(e *colly.HTMLElement) {
+		fmt.Println(e)
+		fmt.Println("wtf")
 
+	})
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
 	})
 }
 
@@ -33,4 +38,3 @@ func InitMsg(uid string) scraper.Results[string] {
 func GetMsg(uid string, from int, count int) scraper.Results[string] {
 	return problemScraper.Scrape(getPersonSubmissions(uid, from, count))
 }
-

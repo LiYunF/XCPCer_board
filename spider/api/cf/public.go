@@ -1,9 +1,21 @@
 package cf
 
-import "fmt"
+import (
+	"crypto/sha512"
+	"fmt"
+	"time"
+)
 
+func getapikey(apikey string, secret string) {
+	apikey = "&apiKey=" + apikey
+	time := time.Now() //获取当前时间
+
+	fmt.Println(time)
+	//time = "&time=" + strconv.Itoa(time)
+}
 func getPersonSubmissionsInit(uid string) string {
-	return "https://codeforces.com/api/user.status?handle=" + uid
+
+	return "https://codeforces.com/api/user.status?handle=" + uid + fmt.Sprintf("%x", sha512.Sum512([]byte(uid)))
 }
 func getPersonSubmissions(uid string, from int, count int) string {
 	//uid 	(Required)	Codeforces user handle.
