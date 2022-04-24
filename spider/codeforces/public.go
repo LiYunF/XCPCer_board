@@ -98,5 +98,5 @@ func getPersonPage(uid string) string {
 	return "https://codeforces.com/profile/" + uid
 }
 func getPersonProblemPage(uid string) string {
-	return "https://codeforces.com/profile/" + uid
+	return "https://codeforces.com/submissions/" + uid
 }

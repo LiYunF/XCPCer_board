@@ -2,7 +2,7 @@ package main
 
 import (
 	"XCPCer_board/model"
-	"XCPCer_board/spider/api/cf"
+	"XCPCer_board/spider/codeforces"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
@@ -12,5 +12,5 @@ func main() {
 
 	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
 	//fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
-	fmt.Println(cf.ScrapeAll(model.TestCodeForcesIdLYF))
+	fmt.Println(codeforces.GetInitPersonProblemList(model.TestCodeForcesIdLYF, 10000))
 }

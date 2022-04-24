@@ -12,6 +12,7 @@ import (
 
 var (
 	proScraper *scraper.Scraper[string]
+	lastId     int
 )
 
 func init() {
@@ -22,12 +23,20 @@ func init() {
 }
 
 func proCallback(c *colly.Collector, res *scraper.Results[string]) {
-	c.OnHTML("body", func(e *colly.HTMLElement) {
+	c.OnHTML(".datatable table[class=\"status-frame-datatable\"] tbody", func(e *colly.HTMLElement) {
 		//fmt.Println(e.DOM.First().Text())
-		fmt.Println()
+		fmt.Println("wtf")
+		//fmt.Println(e.DOM.First().Text())
+		tp := make(map[string]string)
+		//minId:=9223372036854775806
+		e.ForEach("tr", func(_ int, el *colly.HTMLElement) {
+			tp[el.Attr("data-submission-id")] = "1"
+		})
+		fmt.Println(tp)
 	})
 }
 
-func GetInitPersonProblemList(uid string) scraper.Results[string] {
-	return proScraper.Scrape(getPersonPage(uid))
+func GetInitPersonProblemList(uid string, last int) scraper.Results[string] {
+	lastId = last
+	return proScraper.Scrape(getPersonProblemPage(uid))
 }
