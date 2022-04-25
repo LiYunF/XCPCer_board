@@ -31,3 +31,4 @@
 
 - 2022.3.9 实现了Codeforces爬取个人rating对应的名称。同时完成了Codeforces模块的小规模单元测试
 - 2022.4.10~2022.4.14 利用colly框架，实现了codeforces、vj、luogu网站内容的爬取
+- 2022.4.25 更新了配置文件
