@@ -37,3 +37,13 @@ func ScrapeStr(uid string) (map[string]string, error) {
 	}
 	return res, nil
 }
+func ScrapeProblem(uid string, last int) (map[string]string, error) {
+	// 请求所有并合并所有
+	res, err := scraper.MergeAllResults[string, string](
+		GetStrMsg(uid),
+	)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}

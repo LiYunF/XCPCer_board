@@ -16,6 +16,7 @@ var (
 func init() {
 	strScraper = scraper.NewScraper[string](
 		scraper.WithCallback(strCallback),
+		scraper.WithThreads[string](2),
 	)
 }
 
