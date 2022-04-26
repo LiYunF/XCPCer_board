@@ -1,17 +1,9 @@
-package spider
+package codeforces
 
 import (
 	"XCPCer_board/model"
-	"XCPCer_board/spider/codeforces"
-	"XCPCer_board/spider/luogu"
-	"XCPCer_board/spider/nowcoder"
-	"XCPCer_board/spider/vjudge"
 	"testing"
 )
-
-type cfIntMsg struct {
-	uid string
-}
 
 //检查函数，若不一致返回1
 func isIntMsgDifferent(funcRet, ans map[string]int) bool {
@@ -51,17 +43,13 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 	}
 }
 
-//////////////////////////////////////
-/////		测试四大模块     //////////
-/////////////////////////////////////
-
 //测试codeforces
 func cfTest(t *testing.T) {
 
 	//基础设置
 	tp := "codeforces"
-	fc1 := codeforces.ScrapeAll
-	fc2 := codeforces.ScrapeStr
+	fc1 := ScrapeAll
+	fc2 := ScrapeStr
 	var uid string
 	var cfInt map[string]int
 	var cfStr map[string]string
@@ -83,70 +71,7 @@ func cfTest(t *testing.T) {
 	checkStrError(t, uid, tp, fc2, cfStr)
 
 }
-func luoGuTest(t *testing.T) {
 
-	tp := "luoGu"
-	fc1 := luogu.ScrapeAll
-	var uid string
-	var lgInt map[string]int
-
-	//输入个例
-	uid = model.TestLuoGuIdLYF
-	lgInt = map[string]int{
-		"luoGu_Basic_Problem_Number":       195,
-		"luoGu_Elevated_Problem_Number":    368,
-		"luoGu_Hard_Problem_Number":        1069,
-		"luoGu_Person_Pass_Problem_Number": 1743,
-		"luoGu_Person_Ranting":             796,
-		"luoGu_Simple_Problem_Number":      43,
-		"luoGu_UnKnow_Problem_Number":      68,
-	}
-
-	//开始测试
-	checkIntError(t, uid, tp, fc1, lgInt)
-
-}
-func nowCoderTest(t *testing.T) {
-
-	tp := "nowCoder"
-	fc1 := nowcoder.ScrapeAll
-	var uid string
-	var ncInt map[string]int
-
-	//输入个例
-	uid = model.TestNowCoderIdLYF
-	ncInt = map[string]int{
-		"NowCoder_Main_AttendContestAmount": 23,
-		"NowCoder_Main_Rating":              -1,
-		"NowCoder_Main_RatingRanking":       -1,
-		"NowCoder_Practice_PassAmount":      39,
-	}
-	//开始测试
-	checkIntError(t, uid, tp, fc1, ncInt)
-
-}
-func vjTest(t *testing.T) {
-
-	tp := "vJudge"
-	fc1 := vjudge.ScrapeAll
-	var uid string
-	var vjInt map[string]int
-
-	uid = model.TestVJIdLYF
-	vjInt = map[string]int{
-		"vj_Person_Last_24_Hours_Pass_Number": 0,
-		"vj_Person_Last_30_Days_Pass_Number":  0,
-		"vj_Person_Last_7_Days_Pass_Number":   0,
-		"vj_Person_Pass_Number":               30,
-	}
-	//开始测试
-	checkIntError(t, uid, tp, fc1, vjInt)
-
-}
-
-func TestMul(t *testing.T) {
+func TestCF(t *testing.T) {
 	cfTest(t)
-	luoGuTest(t)
-	vjTest(t)
-
 }
