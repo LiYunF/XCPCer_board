@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	conf = &Conf{}
+	Config = &Conf{}
 )
 
 type MQ struct {
@@ -18,11 +18,11 @@ type MQ struct {
 }
 
 type MySql struct {
-	Msg MQ     `yaml:"DB_Message"`
 	CF  string `yaml:"cfTable"`
-	NK  string `yaml:"ncTable"`
+	NK  string `yaml:"nkTable"`
 	VJ  string `yaml:"vjTable"`
 	LG  string `yaml:"lgTable"`
+	Msg MQ     `yaml:"Message"`
 }
 
 type Conf struct {
@@ -30,14 +30,20 @@ type Conf struct {
 	Database    MySql  `yaml:"database"`
 }
 
-func init() {
-	path := "config/config.yaml"
+func InitConfig(path string) error {
+
 	if f, err := os.Open(path); err != nil {
 		log.Errorf("Init config Error : %v", err)
+		return err
 	} else {
-		yaml.NewDecoder(f).Decode(conf)
+		yaml.NewDecoder(f).Decode(Config)
 	}
+	return nil
 }
-func GetDBMsg() MySql {
-	return conf.Database
+func InitAll() error {
+	if err := InitConfig("config/config.yaml"); err != nil {
+		return err
+	}
+
+	return nil
 }
