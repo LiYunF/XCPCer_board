@@ -1,7 +1,8 @@
 package main
 
 import (
-	"XCPCer_board/config"
+	"XCPCer_board/model"
+	"XCPCer_board/spider/atcoder"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
@@ -12,6 +13,7 @@ func main() {
 	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
 	//fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
 	//fmt.Println(codeforces.GetInitPersonProblemList(model.TestCodeForcesIdLYF, 10000))
-	q := config.GetDBMsg()
-	fmt.Println(q.CF)
+	//q := config.GetDBMsg()
+	//fmt.Println(q.CF)
+	fmt.Println(atcoder.ScrapeAll(model.TestAtcIdLQY))
 }

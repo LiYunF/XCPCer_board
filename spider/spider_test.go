@@ -2,6 +2,7 @@ package spider
 
 import (
 	"XCPCer_board/model"
+	"XCPCer_board/spider/atcoder"
 	"XCPCer_board/spider/codeforces"
 	"XCPCer_board/spider/luogu"
 	"XCPCer_board/spider/nowcoder"
@@ -144,9 +145,26 @@ func vjTest(t *testing.T) {
 
 }
 
+func atcTest(t *testing.T) {
+
+	tp := "atCoder"
+	fc1 := atcoder.ScrapeAll
+	var uid string
+	var atcInt map[string]int
+
+	uid = model.TestAtcIdLQY
+	atcInt = map[string]int{
+		"atc_contest_sum": 6,
+		"atc_rating":      785,
+	}
+	//开始测试
+	checkIntError(t, uid, tp, fc1, atcInt)
+
+}
+
 func TestMul(t *testing.T) {
 	cfTest(t)
 	luoGuTest(t)
 	vjTest(t)
-
+	atcTest(t)
 }
