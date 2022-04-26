@@ -12,7 +12,7 @@ func main() {
 	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
 	//fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
 	//fmt.Println(codeforces.GetInitPersonProblemList(model.TestCodeForcesIdLYF, 10000))
-	config.InitConfig()
+	config.InitAll()
 
 	fmt.Println(config.Config)
 }
