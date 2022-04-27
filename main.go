@@ -2,6 +2,9 @@ package main
 
 import (
 	"XCPCer_board/config"
+	"XCPCer_board/db/mysql"
+	"XCPCer_board/model"
+	"XCPCer_board/spider/luogu"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
@@ -9,10 +12,9 @@ import (
 // 主入口函数
 func main() {
 
-	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
-	//fmt.Println(vjudge.ScrapeAll(model.TestVJIdLYF))
-	//fmt.Println(codeforces.GetInitPersonProblemList(model.TestCodeForcesIdLYF, 10000))
+	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
 	config.InitAll()
-
-	fmt.Println(config.Config)
+	//fmt.Println(config.Config)
+	mysql.InitDB()
+	fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
 }

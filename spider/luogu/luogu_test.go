@@ -43,26 +43,16 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 	}
 }
 func luoGuTest(t *testing.T) {
-
-	tp := "luoGu"
-	fc1 := ScrapeAll
-	var uid string
-	var lgInt map[string]int
-
-	//输入个例
-	uid = model.TestLuoGuIdLYF
-	lgInt = map[string]int{
-		"luoGu_Basic_Problem_Number":       195,
-		"luoGu_Elevated_Problem_Number":    368,
-		"luoGu_Hard_Problem_Number":        1069,
-		"luoGu_Person_Pass_Problem_Number": 1743,
-		"luoGu_Person_Ranting":             837,
-		"luoGu_Simple_Problem_Number":      43,
-		"luoGu_UnKnow_Problem_Number":      68,
-	}
-
 	//开始测试
-	checkIntError(t, uid, tp, fc1, lgInt)
+	checkIntError(t, model.TestLuoGuIdLYF, "luoGu", ScrapeAll, map[string]int{
+		luoGuBasicProblemNumber:      30,
+		luoGuElevatedProblemNumber:   19,
+		luoGuHardProblemNumber:       6,
+		luoGuPersonPassProblemNumber: 55,
+		luoGuPersonRanting:           94718,
+		luoGuSimpleProblemNumber:     0,
+		luoGuUnKnowProblemNumber:     0,
+	})
 
 }
 

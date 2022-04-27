@@ -31,7 +31,7 @@ func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 
 		//decoder
 		text, _ := url.QueryUnescape(e.DOM.Text())
-
+		
 		//get JsonText
 		Data := text[strings.Index(text, "{") : strings.LastIndex(text, "}")+1]
 		err := json.Unmarshal([]byte(Data), &jsonData)

@@ -43,21 +43,13 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 	}
 }
 func vjTest(t *testing.T) {
-
-	tp := "vJudge"
-	fc1 := ScrapeAll
-	var uid string
-	var vjInt map[string]int
-
-	uid = model.TestVJIdLYF
-	vjInt = map[string]int{
+	//开始测试
+	checkIntError(t, model.TestVJIdLYF, "vJudge", ScrapeAll, map[string]int{
 		"vj_Person_Last_24_Hours_Pass_Number": 0,
 		"vj_Person_Last_30_Days_Pass_Number":  0,
 		"vj_Person_Last_7_Days_Pass_Number":   0,
 		"vj_Person_Pass_Number":               30,
-	}
-	//开始测试
-	checkIntError(t, uid, tp, fc1, vjInt)
+	})
 
 }
 
