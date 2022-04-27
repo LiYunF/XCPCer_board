@@ -1,0 +1,8 @@
+[2022-04-27 13:42:48] [97;41merror[0m init.go:24 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "mysql" (forgotten import?)
+[2022-04-27 13:47:10] [97;41merror[0m init.go:24 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 13:48:44] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 13:49:13] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 14:51:47] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 15:00:26] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 15:02:59] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)
+[2022-04-27 15:03:46] [97;41merror[0m init.go:25 XCPCer_board/db/mysql.InitDB: Open Sql Error: sql: unknown driver "XCPC_board_mysql" (forgotten import?)

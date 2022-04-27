@@ -17,7 +17,7 @@ type MQ struct {
 	Password string `yaml:"password"`
 }
 
-type MySql struct {
+type DB struct {
 	CF  string `yaml:"cfTable"`
 	NK  string `yaml:"nkTable"`
 	VJ  string `yaml:"vjTable"`
@@ -27,7 +27,7 @@ type MySql struct {
 
 type Conf struct {
 	Description string `yaml:"description"`
-	Database    MySql  `yaml:"database"`
+	Database    DB     `yaml:"database"`
 }
 
 func InitConfig(path string) error {

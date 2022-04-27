@@ -8,19 +8,19 @@ import (
 
 const (
 	//过题数
-	luoGuPersonPassProblemNumber = "luoGu_Person_Pass_Problem_Number"
+	luoGuPersonPassProblemNumber = "lg_problem_number"
 	//排名
-	luoGuPersonRanting = "luoGu_Person_Ranting"
+	luoGuPersonRanting = "lg_ranting"
 	//简单题个数
-	luoGuSimpleProblemNumber = "luoGu_Simple_Problem_Number"
+	luoGuSimpleProblemNumber = "simple_problem_number"
 	//基础题个数
-	luoGuBasicProblemNumber = "luoGu_Basic_Problem_Number"
+	luoGuBasicProblemNumber = "base_problem_number"
 	//提高题个数
-	luoGuElevatedProblemNumber = "luoGu_Elevated_Problem_Number"
+	luoGuElevatedProblemNumber = "elevated_problem_number"
 	//困难题个数
-	luoGuHardProblemNumber = "luoGu_Hard_Problem_Number"
+	luoGuHardProblemNumber = "hard_problem_number"
 	//未知题个数
-	luoGuUnKnowProblemNumber = "luoGu_UnKnow_Problem_Number"
+	luoGuUnKnowProblemNumber = "unKnow_problem_number"
 )
 
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
