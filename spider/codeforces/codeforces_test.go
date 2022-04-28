@@ -47,13 +47,13 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 func cfTest(t *testing.T) {
 	//开始测试
 	checkIntError(t, model.TestCodeForcesIdLYF, "CFInt", ScrapeAll, map[string]int{
-		"CodeForces_Last_Month_Practice_PassAmount": 0,
-		"CodeForces_Main_Max_Rating":                1837,
-		"CodeForces_Main_Rating":                    1742,
-		"CodeForces_Practice_PassAmount":            350,
+		lastMonthPassAmount:  0,
+		maxRatingKey:         1837,
+		ratingKey:            1742,
+		problemPassAmountKey: 350,
 	})
 	checkStrError(t, model.TestCodeForcesIdLYF, "CFString", ScrapeStr, map[string]string{
-		"CodeForces_Main_Rating_Name": "Expert ",
+		ratingNameKey: "Expert ",
 	})
 
 }
