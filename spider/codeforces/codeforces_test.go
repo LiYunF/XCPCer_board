@@ -45,30 +45,16 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 
 //测试codeforces
 func cfTest(t *testing.T) {
-
-	//基础设置
-	tp := "codeforces"
-	fc1 := ScrapeAll
-	fc2 := ScrapeStr
-	var uid string
-	var cfInt map[string]int
-	var cfStr map[string]string
-
-	//个例赋值
-	uid = model.TestCodeForcesIdLYF
-	cfInt = map[string]int{
-		"CodeForces_Last_Month_Practice_PassAmount": 0,
-		"CodeForces_Main_Max_Rating":                1837,
-		"CodeForces_Main_Rating":                    1742,
-		"CodeForces_Practice_PassAmount":            350,
-	}
-	cfStr = map[string]string{
-		"CodeForces_Main_Rating_Name": "Expert ",
-	}
-
 	//开始测试
-	checkIntError(t, uid, tp, fc1, cfInt)
-	checkStrError(t, uid, tp, fc2, cfStr)
+	checkIntError(t, model.TestCodeForcesIdLYF, "CFInt", ScrapeAll, map[string]int{
+		lastMonthPassAmount:  0,
+		maxRatingKey:         1837,
+		ratingKey:            1742,
+		problemPassAmountKey: 350,
+	})
+	checkStrError(t, model.TestCodeForcesIdLYF, "CFString", ScrapeStr, map[string]string{
+		ratingNameKey: "Expert ",
+	})
 
 }
 

@@ -23,13 +23,14 @@ func init() {
 func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 	c.OnHTML("#body", func(e *colly.HTMLElement) {
 		//fmt.Println(r.DOM.First().Text())
-		res.Set(codeforcesPracticePassAmountKey, strToInt(e.DOM, cfPracticePassAmountHandler))
-		res.Set(codeforcesLastMonthPracticePassAmount, strToInt(e.DOM, cfPracticePassLastMonthAmountHandler))
-		res.Set(codeforcesMainRatingKey, strToInt(e.DOM, cfMainRatingHandler))
-		res.Set(codeforcesMaxMainRatingKey, strToInt(e.DOM, cfMaxMainRatingHandler))
+		res.Set(problemPassAmountKey, strToInt(e.DOM, problemPassAmountHandler))
+		res.Set(lastMonthPassAmount, strToInt(e.DOM, lastMonthAmountHandler))
+		res.Set(ratingKey, strToInt(e.DOM, ratingHandler))
+		res.Set(maxRatingKey, strToInt(e.DOM, maxRatingHandler))
 	})
 }
 
+//GetIntMsg 对外暴露函数，获取int信息
 func GetIntMsg(uid string) scraper.Results[int] {
 	return intScraper.Scrape(getPersonPage(uid))
 }

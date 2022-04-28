@@ -12,7 +12,7 @@ services:
       - /mysql/source:/docker-entrypoint-initdb.d
     environment:
       - "MYSQL_ROOT_PASSWORD=10086"
-      - "MYSQL_DATABASE=XCPC_board_DBe"
+      - "MYSQL_DATABASE=XCPC_board_mysql"
     ports:
       # 使用宿主机的3306端口映射到容器的3306端口
       # 宿主机：容器
