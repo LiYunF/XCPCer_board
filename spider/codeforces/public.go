@@ -27,13 +27,13 @@ const (
 
 	// CF finder关键词
 	// 个人总过题数
-	practicePassAmountKeyWord = "all"
+	problemPassKeyWord = "all"
 	//个人最后一月过题数
-	lastMonthPassNumberKeyWord = "month"
+	lastMonthPassKeyWord = "month"
 	// 个人rating
-	mainRatingKeyWord = "rating"
+	ratingKeyWord = "rating"
 	// 个人历史最高rating
-	maxMainRatingKeyWord = "max"
+	maxRatingKeyWord = "max"
 )
 
 //problemPassAmountHandler 获取cf个人总过题数
@@ -42,7 +42,7 @@ func problemPassAmountHandler(doc *goquery.Selection) string {
 	retStr := doc.Find(fmt.Sprintf("div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame"+
 		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer"+
 		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(%v)"+
-		" ._UserActivityFrame_counterValue", practicePassAmountKeyWord)).First().Text()
+		" ._UserActivityFrame_counterValue", problemPassKeyWord)).First().Text()
 	return strings.Split(retStr, " ")[0]
 	//"1000 problems" -> "1000"
 }
@@ -53,7 +53,7 @@ func lastMonthAmountHandler(doc *goquery.Selection) string {
 	retStr := doc.Find(fmt.Sprintf("div[style=\"position: relative;\"] #pageContent ._UserActivityFrame_frame"+
 		" .roundbox.userActivityRoundBox ._UserActivityFrame_footer"+
 		" ._UserActivityFrame_countersRow ._UserActivityFrame_counter:contains(solved):contains(%v)"+
-		" ._UserActivityFrame_counterValue", lastMonthPassNumberKeyWord)).First().Text()
+		" ._UserActivityFrame_counterValue", lastMonthPassKeyWord)).First().Text()
 	return strings.Split(retStr, " ")[0]
 }
 
@@ -63,7 +63,7 @@ func ratingHandler(doc *goquery.Selection) string {
 	retStr := doc.Find(fmt.Sprintf("div[style=\"position: relative;\"] #pageContent "+
 		" .userbox .info ul li:contains(%v)"+
 		" span[style]", //有style的<span>是我们想要的
-		mainRatingKeyWord)).First().Text()
+		ratingKeyWord)).First().Text()
 	return strings.Split(retStr, " ")[0]
 }
 
@@ -73,7 +73,7 @@ func maxRatingHandler(doc *goquery.Selection) string {
 	retStr := doc.Find(fmt.Sprintf("div[style=\"position: relative;\"] #pageContent "+
 		" .userbox .info ul li:contains(%v)"+
 		" .smaller span+span", //选择他的邻居
-		maxMainRatingKeyWord)).First().Text()
+		maxRatingKeyWord)).First().Text()
 	return strings.Split(retStr, " ")[0]
 }
 
