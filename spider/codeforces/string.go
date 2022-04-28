@@ -23,10 +23,11 @@ func init() {
 func strCallback(c *colly.Collector, res *scraper.Results[string]) {
 	c.OnHTML("#body", func(e *colly.HTMLElement) {
 		//fmt.Println(r.DOM.First().Text())
-		res.Set(codeforcesMainRatingNameKey, codeforcesMainRatingNameHandler(e.DOM))
+		res.Set(ratingNameKey, ratingNameHandler(e.DOM))
 	})
 }
 
+//GetStrMsg 对外暴露函数，获取str信息
 func GetStrMsg(uid string) scraper.Results[string] {
 	return strScraper.Scrape(getPersonPage(uid))
 }
