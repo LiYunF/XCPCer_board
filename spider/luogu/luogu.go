@@ -3,7 +3,6 @@ package luogu
 import (
 	"XCPCer_board/db/mysql"
 	"XCPCer_board/scraper"
-	"strconv"
 )
 
 func ScrapeAll(uid string) (map[string]int, error) {
@@ -29,15 +28,12 @@ func InsertSql(uid string) error {
 	sqlStr := "insert into " + "lg " + "(user_luogu_id, "
 	keyList := [10]string{}
 	valList := [10]any{}
-	valList[0], err = strconv.Atoi(uid)
-	if err != nil {
-		return err
-	}
+	valList[0] = uid
 	cnt := 0
 	for key, val := range res {
 		keyList[cnt] = key
-		valList[cnt] = val
 		cnt++
+		valList[cnt] = val
 	}
 	for i, v := range keyList {
 		sqlStr += v
