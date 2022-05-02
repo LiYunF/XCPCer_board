@@ -31,7 +31,7 @@ func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 
 		//decoder
 		text, _ := url.QueryUnescape(e.DOM.Text())
-		
+
 		//get JsonText
 		Data := text[strings.Index(text, "{") : strings.LastIndex(text, "}")+1]
 		err := json.Unmarshal([]byte(Data), &jsonData)
@@ -65,14 +65,14 @@ func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 		}
 
 		//set data
-		res.Set(luoGuPersonPassProblemNumber, int(user.GetPassedProblemCount()))
-		res.Set(luoGuPersonRanting, int(user.GetRanking()))
+		res.Set(passProblemNumber, int(user.GetPassedProblemCount()))
+		res.Set(ranting, int(user.GetRanking()))
 		//set data of problem
-		res.Set(luoGuUnKnowProblemNumber, difficulty[0])
-		res.Set(luoGuSimpleProblemNumber, difficulty[1])
-		res.Set(luoGuBasicProblemNumber, difficulty[2])
-		res.Set(luoGuElevatedProblemNumber, difficulty[3])
-		res.Set(luoGuHardProblemNumber, difficulty[4])
+		res.Set(unKnowProblem, difficulty[0])
+		res.Set(simpleProblem, difficulty[1])
+		res.Set(basicProblem, difficulty[2])
+		res.Set(elevatedProblem, difficulty[3])
+		res.Set(hardProblem, difficulty[4])
 	})
 }
 
