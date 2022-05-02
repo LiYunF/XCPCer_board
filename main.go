@@ -17,4 +17,5 @@ func main() {
 	//fmt.Println(config.Config)
 	mysql.InitDB()
 	fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
+
 }

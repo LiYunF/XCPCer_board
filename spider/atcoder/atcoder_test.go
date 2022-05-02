@@ -6,8 +6,9 @@ import (
 )
 
 var atcTestData = map[string]int{
-	"atc_contest_sum": 6,
-	"atc_rating":      785,
+	"atc_contest_sum":  6,
+	"atc_problem_sums": 26,
+	"atc_rating":       785,
 }
 
 func dataCheck(atcData map[string]int) bool {
