@@ -26,7 +26,6 @@ const (
 
 var (
 	mainScraper *scraper.Scraper[int]
-	contestUrl  []string
 )
 
 // 初始化
