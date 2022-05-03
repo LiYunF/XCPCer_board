@@ -9,5 +9,4 @@ CREATE TABLE `codeforces` (
                         `rating` int(10) comment  '难度',
                         PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='集体表格汇总';
-
 alter table codeforces add unique key `name_problem` (`user_id`,`contest_id`,`problem_index`);
