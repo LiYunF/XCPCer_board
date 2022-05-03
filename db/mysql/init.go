@@ -28,4 +28,5 @@ func init() {
 	//fmt.Println("成功打开MYSQL")
 	Db.SetMaxOpenConns(20)
 	Db.SetMaxIdleConns(10)
+	fmt.Println(dsn)
 }

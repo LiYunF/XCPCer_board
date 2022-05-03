@@ -30,20 +30,15 @@ type Conf struct {
 	Database    DB     `yaml:"database"`
 }
 
-func InitConfig(path string) error {
-
-	if f, err := os.Open(path); err != nil {
+func InitConfig(path string) {
+	f, err := os.Open(path)
+	defer f.Close()
+	if err != nil {
 		log.Errorf("Init config Error : %v", err)
-		return err
 	} else {
 		yaml.NewDecoder(f).Decode(Config)
 	}
-	return nil
 }
-func InitAll() error {
-	if err := InitConfig("config/config.yml"); err != nil {
-		return err
-	}
-
-	return nil
+func init() {
+	InitConfig("config/config.yml")
 }
