@@ -1,15 +1,13 @@
-package DBluogu
+package luogu
 
 import (
 	"XCPCer_board/db/mysql"
-	"XCPCer_board/spider/luogu"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 )
 
 func InsertSql(uid string) error {
 	//get data
-	res, err := luogu.ScrapeAll(uid)
+	res, err := ScrapeAll(uid)
 	if err != nil {
 		return err
 	}
@@ -18,7 +16,7 @@ func InsertSql(uid string) error {
 		",base_problem_number,elevated_problem_number,hard_problem_number," +
 		"unKnow_problem_number) values (?,?,?,?,?,?,?,?)"
 	//get struct
-	user, ok := luogu.MapToStruct(res)
+	user, ok := MapToStruct(res)
 	if !ok {
 		log.Errorf("Map of " + uid + "is incomplete\n")
 	}
@@ -42,7 +40,7 @@ func QuerySql(uid string) error {
 	sqlStr := "select problem_number, ranting, simple_problem_number" +
 		",base_problem_number,elevated_problem_number,hard_problem_number," +
 		"unKnow_problem_number from lg where uid=?"
-	var user luogu.UserMsg
+	var user UserMsg
 	user.Uid = uid
 	// 非常重要:确保QueryRow之后调用Scan方法,否则持有数据的连接不会被释放
 	err := mysql.Db.QueryRow(sqlStr, uid).Scan(&user.PassProblemNumber, &user.Ranting,
@@ -53,7 +51,7 @@ func QuerySql(uid string) error {
 		return err
 	}
 
-	fmt.Printf("data of :%v\n "+
+	log.Printf("data of :%v\n "+
 		"PassProblemNumber:%v\n"+
 		"Ranting:%v\n"+
 		"SimpleProblemPass:%v\n"+

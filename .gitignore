@@ -16,3 +16,8 @@
 
 
 .idea
+
+#Database
+docker/mysql/
+#log
+log/
