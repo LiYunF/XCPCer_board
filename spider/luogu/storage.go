@@ -52,17 +52,6 @@ func QuerySql(uid string) error {
 		return err
 	}
 
-	//log.Printf("data of :%v\n "+
-	//	"PassProblemNumber:%v\n"+
-	//	"Ranting:%v\n"+
-	//	"SimpleProblemPass:%v\n"+
-	//	"BasicProblemPass:%v\n"+
-	//	"ElevatedProblemPass:%v\n"+
-	//	"HardProblemPass:%v\n"+
-	//	"UnKnowProblemPass:%v\n", uid, user.PassProblemNumber, user.Ranting,
-	//	user.SimpleProblem, user.BasicProblem, user.ElevatedProblem, user.HardProblem,
-	//	user.UnKnowProblem)
-
 	return err
 }
 
