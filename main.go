@@ -19,5 +19,4 @@ func main() {
 	//fmt.Println(DBluogu.InsertSql(model.TestLuoGuIdLYF))
 	fmt.Println(luogu.QuerySql(model.TestLuoGuIdLYF))
 	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
-
 }
