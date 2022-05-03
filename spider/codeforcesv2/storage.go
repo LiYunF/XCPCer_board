@@ -1,7 +1,8 @@
 package codeforcesv2
 
 import (
-	"database/sql"
+	"XCPCer_board/db/mysql"
+	_ "XCPCer_board/db/mysql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
@@ -9,17 +10,7 @@ import (
 )
 
 func createTableName() error {
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)"+
-		"/codeforces?charset=utf8&multiStatements=true")
-	if err != nil {
-		log.Fatal("fail to start mysql", err)
-		return err
-	}
-	defer func() {
-		if db != nil {
-			db.Close()
-		}
-	}()
+	db := mysql.Db
 	Trans, err := db.Begin()
 	if err != nil {
 		log.Fatal("fail to start transaction", err)
@@ -43,13 +34,7 @@ func createTableName() error {
 }
 
 func insertTable(mp map[string]Submission, useName string) error {
-	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)"+
-		"/codeforces?charset=utf8&multiStatements=true")
-
-	if err != nil {
-		return err
-	}
-	defer db.Close()
+	db := mysql.Db
 
 	sql, _ := db.Prepare("insert into cf (`Id`,`user_id`,`problem_index`,`contest_id`,`rating`,`problem_name`)value(?,?,?,?,?,?)")
 	for _, i := range mp {
