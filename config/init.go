@@ -41,7 +41,7 @@ func InitConfig(path string) error {
 	return nil
 }
 func InitAll() error {
-	if err := InitConfig("config/config.yaml"); err != nil {
+	if err := InitConfig("config/config.yml"); err != nil {
 		return err
 	}
 

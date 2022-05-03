@@ -1,0 +1,3 @@
+[2022-05-02 22:08:36] [97;41merror[0m option.go:120 XCPCer_board/scraper.(*Scraper[...]).newThread.func1: Scraper Visit Error Get "https://www.DBluogu.com.cn/user/241858#practice": dial tcp: lookup www.DBluogu.com.cn: no such host
+[2022-05-02 22:08:36] [97;41merror[0m option.go:120 XCPCer_board/scraper.(*Scraper[...]).newThread.func1: Scraper Visit Error Get "https://www.DBluogu.com.cn/user/241858#practice": dial tcp: lookup www.DBluogu.com.cn: no such host
+[2022-05-02 22:41:30] [97;41merror[0m sql.go:50 XCPCer_board/db/DBluogu.QuerySql: scan failed, err: Error 1146: Table 'xcpc_board_mysql.user' doesn't exist 

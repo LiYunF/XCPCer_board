@@ -2,7 +2,7 @@ package main
 
 import (
 	"XCPCer_board/config"
-	"XCPCer_board/db/mysql"
+	mysql2 "XCPCer_board/db/mysql"
 	"XCPCer_board/model"
 	"XCPCer_board/spider/luogu"
 	"fmt"
@@ -12,10 +12,11 @@ import (
 // 主入口函数
 func main() {
 
-	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
+	//fmt.Println(DBluogu.ScrapeAll(model.TestLuoGuIdLYF))
 	config.InitAll()
 	//fmt.Println(config.Config)
-	mysql.InitDB()
-	fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
-
+	mysql2.InitDB()
+	//fmt.Println(DBluogu.InsertSql(model.TestLuoGuIdLYF))
+	fmt.Println(luogu.QuerySql(model.TestLuoGuIdLYF))
+	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
 }

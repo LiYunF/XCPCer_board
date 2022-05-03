@@ -45,13 +45,13 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 func luoGuTest(t *testing.T) {
 	//开始测试
 	checkIntError(t, model.TestLuoGuIdLYF, "luoGu", ScrapeAll, map[string]int{
-		luoGuBasicProblemNumber:      30,
-		luoGuElevatedProblemNumber:   19,
-		luoGuHardProblemNumber:       6,
-		luoGuPersonPassProblemNumber: 55,
-		luoGuPersonRanting:           94718,
-		luoGuSimpleProblemNumber:     0,
-		luoGuUnKnowProblemNumber:     0,
+		basicProblem:      30,
+		elevatedProblem:   19,
+		hardProblem:       6,
+		passProblemNumber: 55,
+		ranting:           94718,
+		simpleProblem:     0,
+		unKnowProblem:     0,
 	})
 
 }
