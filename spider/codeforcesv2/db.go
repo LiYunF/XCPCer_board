@@ -1,7 +1,6 @@
-package codeforces
+package codeforcesv2
 
 import (
-	"XCPCer_board/spider/codeforcesv2"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -43,7 +42,7 @@ func createTableName() error {
 	return nil
 }
 
-func insertTable(mp map[string]codeforcesv2.Submission, useName string) error {
+func insertTable(mp map[string]Submission, useName string) error {
 	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)"+
 		"/codeforces?charset=utf8&multiStatements=true")
 

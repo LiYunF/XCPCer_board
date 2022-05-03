@@ -1,4 +1,4 @@
-package codeforces
+package codeforcesv2
 
 import "testing"
 
