@@ -2,7 +2,7 @@ package main
 
 import (
 	"XCPCer_board/config"
-	mysql2 "XCPCer_board/db/mysql"
+	_ "XCPCer_board/db/mysql"
 	"XCPCer_board/model"
 	"XCPCer_board/spider/luogu"
 	"fmt"
@@ -15,7 +15,6 @@ func main() {
 	//fmt.Println(DBluogu.ScrapeAll(model.TestLuoGuIdLYF))
 	config.InitAll()
 	//fmt.Println(config.Config)
-	mysql2.InitDB()
 	//fmt.Println(DBluogu.InsertSql(model.TestLuoGuIdLYF))
 	fmt.Println(luogu.QuerySql(model.TestLuoGuIdLYF))
 	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
