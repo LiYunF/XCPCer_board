@@ -31,7 +31,7 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	//用goquery
 	num := 1
 
-	c.OnHTML("td[class=\"text-left\"]", func(element *colly.HTMLElement) {
+	c.OnHTML("tr", func(element *colly.HTMLElement) {
 		str := strconv.Itoa(num)
 		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
 		num = num + 1
@@ -39,8 +39,8 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 }
 
 //获取 userID
-func getAtCoderHistoryUrl(atCoderId string) string {
-	return "https://atcoder.jp/users/" + atCoderId + "/history"
+func getAtCoderHistoryUrl(page string) string {
+	return "https://atcoder.jp/contests/archive?page=" + page
 }
 
 //获取 contestId
@@ -56,6 +56,6 @@ func getAtCoderContestId(e *colly.HTMLElement) string {
 
 //FetchMainPage 抓取个人主页页面所有
 
-func FetchContestHistory(uid string) scraper.Results[string] {
-	return contestScraper.Scrape(getAtCoderHistoryUrl(uid))
+func FetchContestpage(page int) scraper.Results[[]string] {
+	return contestScraper.Scrape(getAtCoderHistoryUrl(page))
 }

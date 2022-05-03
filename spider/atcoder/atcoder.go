@@ -20,7 +20,7 @@ func ScrapeAll(uid string) (map[string]int, error) {
 
 	for _, cid := range allCid {
 		_, err := scraper.MergeAllResults[string, int](
-			FetchProblemSum(uid, cid),
+			//FetchProblemSum(uid, cid),
 		)
 		//fmt.Println(cRes)
 		if err != nil {
