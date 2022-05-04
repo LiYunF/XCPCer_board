@@ -20,6 +20,7 @@ type rate struct {
 var (
 	name  string
 	count int
+	num   [50]int
 )
 
 //人与题目相关联写一个查询函数返回 账号&codeforces过题总数
@@ -41,3 +42,21 @@ func userSumNumber() (map[string]int, error) {
 }
 
 //人与难度相关联再来写一个查询函数返回map
+func userRatingProblem() (map[string]rate, error) {
+	db := mysql.Db
+	str := "select `user_id`,`rating` from codeforces"
+	qry, err := db.Query(str)
+	if err != nil {
+		return nil, err
+	}
+	var mp map[string]rate
+	for qry.Next() {
+		if err := qry.Scan(&name, &count); err != nil {
+			return nil, err
+		}
+		r := mp[name]
+		r.countRate[count/100+1]++
+		mp[name] = r
+	}
+	return mp, err
+}
