@@ -1,1 +1,0 @@
-[2022-05-04 14:58:17] [97;41merror[0m storage.go:51 XCPCer_board/spider/luogu.QuerySql: scan failed, err: Error 1045: Access denied for user ''@'172.18.0.1' (using password: NO) 
