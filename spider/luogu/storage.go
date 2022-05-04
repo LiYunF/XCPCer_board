@@ -9,7 +9,7 @@ import (
 //InsertSql 插入
 func InsertSql(uid string) error {
 	//get data
-	res, err := ScrapeAll(uid)
+	res, err := ScrapeUser(uid)
 	if err != nil {
 		return err
 	}

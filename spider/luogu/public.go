@@ -4,9 +4,11 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
 	"strconv"
+	"strings"
 )
 
 const (
+	////////////////user//////////////////
 	//过题数
 	passProblemNumber = "problem_number"
 	//排名
@@ -23,17 +25,21 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
-type UserMsg struct {
-	Uid               string
-	PassProblemNumber int
-	Ranting           int
-	SimpleProblem     int
-	BasicProblem      int
-	ElevatedProblem   int
-	HardProblem       int
-	UnKnowProblem     int
+const (
+////////submission/////////
+//题号
+
+)
+
+//获取网页函数
+func getPersonPage(uid string) string {
+	return "https://www.luogu.com.cn/user/" + uid
+}
+func getPersonPractice(uid string) string {
+	return getPersonPage(uid) + "#practice"
 }
 
+//字符转int
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
 	num, err := strconv.Atoi(ret)
@@ -43,54 +49,12 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 	}
 	return num
 }
-func getPersonPage(uid string) string {
-	return "https://www.luogu.com.cn/user/" + uid
-}
-func getPersonPractice(uid string) string {
-	return getPersonPage(uid) + "#practice"
-}
 
-/////////////结构体对外暴露函数///////////////
-
-//StructToMap 结构体转Map
-func StructToMap(user UserMsg) (map[string]int, string) {
-	var mp map[string]int
-	mp[passProblemNumber] = user.PassProblemNumber
-	mp[ranting] = user.Ranting
-	mp[simpleProblem] = user.SimpleProblem
-	mp[basicProblem] = user.BasicProblem
-	mp[elevatedProblem] = user.ElevatedProblem
-	mp[hardProblem] = user.HardProblem
-	mp[unKnowProblem] = user.UnKnowProblem
-	return mp, user.Uid
-}
-
-//MapToStruct Map转结构体, 返回的bool=1为正常，0为map里没有该值
-func MapToStruct(mp map[string]int) (UserMsg, bool) {
-
-	var user UserMsg
-	var ok bool
-
-	if user.PassProblemNumber, ok = mp[passProblemNumber]; !ok {
-		return user, ok
+//unicode转中文
+func unicodeToChinese(raw []byte) ([]byte, error) {
+	str, err := strconv.Unquote(strings.Replace(strconv.Quote(string(raw)), `\\u`, `\u`, -1))
+	if err != nil {
+		return nil, err
 	}
-	if user.Ranting, ok = mp[ranting]; !ok {
-		return user, ok
-	}
-	if user.SimpleProblem, ok = mp[simpleProblem]; !ok {
-		return user, ok
-	}
-	if user.BasicProblem, ok = mp[basicProblem]; !ok {
-		return user, ok
-	}
-	if user.ElevatedProblem, ok = mp[elevatedProblem]; !ok {
-		return user, ok
-	}
-	if user.HardProblem, ok = mp[hardProblem]; !ok {
-		return user, ok
-	}
-	if user.UnKnowProblem, ok = mp[unKnowProblem]; !ok {
-		return user, ok
-	}
-	return user, true
+	return []byte(str), nil
 }
