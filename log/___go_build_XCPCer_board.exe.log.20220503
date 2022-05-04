@@ -1,3 +1,0 @@
-[2022-05-03 15:17:49] [97;41merror[0m storage.go:106 XCPCer_board/spider/luogu.QuerySql: database Query luogu uid=241858 failed,  err:Error 1045: Access denied for user ''@'172.18.0.1' (using password: NO) 
-[2022-05-03 15:17:49] [97;41merror[0m storage.go:145 XCPCer_board/spider/luogu.DeleteSql: database Delete luogu uid=241858 failed,  err:Error 1045: Access denied for user ''@'172.18.0.1' (using password: NO) 
-[2022-05-03 15:46:55] [97;41merror[0m storage.go:107 XCPCer_board/spider/luogu.QuerySql: database Query luogu uid=241858 failed,  err:sql: no rows in result set 
