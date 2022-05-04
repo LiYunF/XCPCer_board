@@ -1,10 +1,14 @@
 package luogu
 
 import (
+	_ "XCPCer_board/config"
+	_ "XCPCer_board/db/mysql"
 	"XCPCer_board/model"
 	"fmt"
 	"testing"
 )
+
+///////////////////方法函数//////////////////////
 
 //检查函数，若不一致返回1
 func isIntMsgDifferent(funcRet, ans map[string]int) bool {
@@ -43,6 +47,7 @@ func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (ma
 		t.Errorf("Error of %v in str msg\n ret= %v  \nbut the ans is %v", tp, ret, acInt)
 	}
 }
+
 func checkSub(t *testing.T, uid string, ans string) {
 	ret, err := ScrapeSub(uid)
 	if err != nil {
@@ -59,6 +64,7 @@ func checkSub(t *testing.T, uid string, ans string) {
 //////////  主测试函数  ///////////////
 /////////////////////////////////////
 
+
 func UserTest(t *testing.T) {
 	//开始测试
 	checkIntError(t, model.TestLuoGuIdLYF, "luoGu", ScrapeUser, map[string]int{
@@ -72,7 +78,9 @@ func UserTest(t *testing.T) {
 	})
 
 }
+
 func SubmissionTest(t *testing.T) {
+
 
 	checkSub(t, model.TestLuoGuIdLYF, "map[P1009:{[NOIP1998 普及组] 阶乘之和 2} P1011:{[NOIP1998 提高组] 车站 2} P1020:{[NOIP1999 普及组] 导弹拦截 3} "+
 		"P1048:{[NOIP2005 普及组] 采药 2} P1060:{[NOIP2006 普及组] 开心的金明 2} P1062:{[NOIP2006 普及组] 数列 2} "+
@@ -92,4 +100,5 @@ func SubmissionTest(t *testing.T) {
 }
 func TestLg(t *testing.T) {
 	UserTest(t)
+	SqlTest(t)
 }

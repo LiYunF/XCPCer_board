@@ -25,6 +25,7 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
+
 const (
 ////////submission/////////
 //题号
@@ -40,6 +41,7 @@ func getPersonPractice(uid string) string {
 }
 
 //字符转int
+
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
 	num, err := strconv.Atoi(ret)
@@ -50,6 +52,7 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 	return num
 }
 
+
 //unicode转中文
 func unicodeToChinese(raw []byte) ([]byte, error) {
 	str, err := strconv.Unquote(strings.Replace(strconv.Quote(string(raw)), `\\u`, `\u`, -1))
@@ -57,4 +60,11 @@ func unicodeToChinese(raw []byte) ([]byte, error) {
 		return nil, err
 	}
 	return []byte(str), nil
+
+func getPersonPage(uid string) string {
+	return "https://www.luogu.com.cn/user/" + uid
+}
+func getPersonPractice(uid string) string {
+	return getPersonPage(uid) + "#practice"
+
 }
