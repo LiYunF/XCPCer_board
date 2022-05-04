@@ -34,7 +34,7 @@ func ScrapeAll(uid string) (map[string]int, error) {
 
 }
 
-// 获得 contestUrl
+// ScrapeCid 获得 contestUrl
 func ScrapeCid(uid string) (map[string]string, error) {
 	// 请求所有并合并所有
 	res, err := scraper.MergeAllResults[string, string](
