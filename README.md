@@ -26,9 +26,8 @@
 ### LiYunF
 
 - 2022.3.7 实现Codeforces爬取个人历史过题量、上周过题量
-
 - 2022.3.8 实现Codeforces爬取个人rating、个人历史最高rating
-
 - 2022.3.9 实现了Codeforces爬取个人rating对应的名称。同时完成了Codeforces模块的小规模单元测试
 - 2022.4.10~2022.4.14 利用colly框架，实现了codeforces、vj、luogu网站内容的爬取
 - 2022.4.25 更新了配置文件
+- 2022.4.26~5.4 更新了luogu个人通过题目的爬取，并进行了小规模单元测试
