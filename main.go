@@ -1,10 +1,8 @@
 package main
 
 import (
-	"XCPCer_board/config"
-	"XCPCer_board/db/mysql"
 	"XCPCer_board/model"
-	"XCPCer_board/spider/luogu"
+	"XCPCer_board/spider/atcoder"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
@@ -13,9 +11,10 @@ import (
 func main() {
 
 	//fmt.Println(luogu.ScrapeAll(model.TestLuoGuIdLYF))
-	config.InitAll()
+	//config.InitAll()
 	//fmt.Println(config.Config)
-	mysql.InitDB()
-	fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
+	//mysql.InitDB()
+	//fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
+	fmt.Println(atcoder.ScrapeSubmission(model.TestAtcIdLQY))
 
 }

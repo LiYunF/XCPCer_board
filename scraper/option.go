@@ -117,7 +117,7 @@ func (s *Scraper[V]) newThread(collector *colly.Collector, res *Results[V]) {
 		go func() {
 			err = collector.Visit(p.Url)
 			if err != nil {
-				log.Errorf("Scraper Visit Error %v", err)
+				log.Errorf("Scraper Visit Error url:%v %v", p.Url, err)
 				res.SetError(err)
 			}
 			finCh <- struct{}{}

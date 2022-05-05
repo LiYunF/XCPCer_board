@@ -4,6 +4,7 @@ import (
 	"XCPCer_board/scraper"
 	"github.com/gocolly/colly"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -16,6 +17,7 @@ const (
 
 var (
 	contestScraper *scraper.Scraper[string]
+	Page           string
 )
 
 // 初始化
@@ -30,22 +32,24 @@ func init() {
 func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	//用goquery
 	num := 1
-
-	c.OnHTML("tr", func(element *colly.HTMLElement) {
+	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
 		str := strconv.Itoa(num)
-		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
+		res.Set(contestKey+"_"+Page+"_"+str, getAtCoderContestId(element))
 		num = num + 1
 	})
 }
 
 //获取 userID
-func getAtCoderHistoryUrl(page string) string {
+func getAtCoderPageUrl(page string) string {
+	//fmt.Println("https://atcoder.jp/contests/archive?page=" + page)
 	return "https://atcoder.jp/contests/archive?page=" + page
 }
 
 //获取 contestId
 func getAtCoderContestId(e *colly.HTMLElement) string {
-	link := e.ChildAttr("a:first-child", "href")
+	//fmt.Println(e.DOM.Find("td:nth-child(2) a").First().Text())
+	link := e.ChildAttr("td:nth-child(2) a", "href")
+	link = strings.Split(link, "/")[2]
 	//fmt.Println(link)
 	return link
 }
@@ -56,6 +60,7 @@ func getAtCoderContestId(e *colly.HTMLElement) string {
 
 //FetchMainPage 抓取个人主页页面所有
 
-func FetchContestpage(page int) scraper.Results[[]string] {
-	return contestScraper.Scrape(getAtCoderHistoryUrl(page))
+func FetchContestPage(page string) scraper.Results[string] {
+	Page = page
+	return contestScraper.Scrape(getAtCoderPageUrl(page))
 }
