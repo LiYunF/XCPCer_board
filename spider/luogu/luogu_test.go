@@ -64,7 +64,6 @@ func checkSub(t *testing.T, uid string, ans string) {
 //////////  主测试函数  ///////////////
 /////////////////////////////////////
 
-
 func UserTest(t *testing.T) {
 	//开始测试
 	checkIntError(t, model.TestLuoGuIdLYF, "luoGu", ScrapeUser, map[string]int{
@@ -80,8 +79,6 @@ func UserTest(t *testing.T) {
 }
 
 func SubmissionTest(t *testing.T) {
-
-
 	checkSub(t, model.TestLuoGuIdLYF, "map[P1009:{[NOIP1998 普及组] 阶乘之和 2} P1011:{[NOIP1998 提高组] 车站 2} P1020:{[NOIP1999 普及组] 导弹拦截 3} "+
 		"P1048:{[NOIP2005 普及组] 采药 2} P1060:{[NOIP2006 普及组] 开心的金明 2} P1062:{[NOIP2006 普及组] 数列 2} "+
 		"P1090:{[NOIP2004 提高组] 合并果子 / [USACO06NOV] Fence Repair G 3} P1091:{[NOIP2004 提高组] 合唱队形 3}"+
@@ -100,5 +97,5 @@ func SubmissionTest(t *testing.T) {
 }
 func TestLg(t *testing.T) {
 	UserTest(t)
-	SqlTest(t)
+	SubmissionTest(t)
 }

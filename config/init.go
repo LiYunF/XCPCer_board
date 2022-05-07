@@ -16,18 +16,18 @@ type MQ struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 }
+type RD struct {
+	Host     string `yaml:"host"`
+	Password string `yaml:"password"`
+}
 
 type DB struct {
-	CF  string `yaml:"cfTable"`
-	NK  string `yaml:"nkTable"`
-	VJ  string `yaml:"vjTable"`
-	LG  string `yaml:"lgTable"`
-	Msg MQ     `yaml:"Message"`
+	MysqlConf MQ `yaml:"Mysql"`
+	RedisConf RD `yaml:"Redis"`
 }
 
 type Conf struct {
-	Description string `yaml:"description"`
-	Database    DB     `yaml:"database"`
+	Database DB `yaml:"database"`
 }
 
 func InitConfig(path string) {

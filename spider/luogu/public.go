@@ -4,7 +4,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -24,7 +23,6 @@ const (
 	//未知题个数
 	unKnowProblem = "unKnow_problem_number"
 )
-
 
 const (
 ////////submission/////////
@@ -50,21 +48,4 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 		return -1
 	}
 	return num
-}
-
-
-//unicode转中文
-func unicodeToChinese(raw []byte) ([]byte, error) {
-	str, err := strconv.Unquote(strings.Replace(strconv.Quote(string(raw)), `\\u`, `\u`, -1))
-	if err != nil {
-		return nil, err
-	}
-	return []byte(str), nil
-
-func getPersonPage(uid string) string {
-	return "https://www.luogu.com.cn/user/" + uid
-}
-func getPersonPractice(uid string) string {
-	return getPersonPage(uid) + "#practice"
-
 }
