@@ -7,21 +7,38 @@ import (
 )
 
 const (
+	////////////////user//////////////////
 	//过题数
-	luoGuPersonPassProblemNumber = "lg_problem_number"
+	passProblemNumber = "problem_number"
 	//排名
-	luoGuPersonRanting = "lg_ranting"
+	ranting = "ranting"
 	//简单题个数
-	luoGuSimpleProblemNumber = "simple_problem_number"
+	simpleProblem = "simple_problem_number"
 	//基础题个数
-	luoGuBasicProblemNumber = "base_problem_number"
+	basicProblem = "base_problem_number"
 	//提高题个数
-	luoGuElevatedProblemNumber = "elevated_problem_number"
+	elevatedProblem = "elevated_problem_number"
 	//困难题个数
-	luoGuHardProblemNumber = "hard_problem_number"
+	hardProblem = "hard_problem_number"
 	//未知题个数
-	luoGuUnKnowProblemNumber = "unKnow_problem_number"
+	unKnowProblem = "unKnow_problem_number"
 )
+
+const (
+////////submission/////////
+//题号
+
+)
+
+//获取网页函数
+func getPersonPage(uid string) string {
+	return "https://www.luogu.com.cn/user/" + uid
+}
+func getPersonPractice(uid string) string {
+	return getPersonPage(uid) + "#practice"
+}
+
+//字符转int
 
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
@@ -31,10 +48,4 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 		return -1
 	}
 	return num
-}
-func getPersonPage(uid string) string {
-	return "https://www.luogu.com.cn/user/" + uid
-}
-func getPersonPractice(uid string) string {
-	return getPersonPage(uid) + "#practice"
 }

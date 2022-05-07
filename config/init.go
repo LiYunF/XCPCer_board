@@ -16,34 +16,29 @@ type MQ struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 }
+type RD struct {
+	Host     string `yaml:"host"`
+	Password string `yaml:"password"`
+}
 
 type DB struct {
-	CF  string `yaml:"cfTable"`
-	NK  string `yaml:"nkTable"`
-	VJ  string `yaml:"vjTable"`
-	LG  string `yaml:"lgTable"`
-	Msg MQ     `yaml:"Message"`
+	MysqlConf MQ `yaml:"Mysql"`
+	RedisConf RD `yaml:"Redis"`
 }
 
 type Conf struct {
-	Description string `yaml:"description"`
-	Database    DB     `yaml:"database"`
+	Database DB `yaml:"database"`
 }
 
-func InitConfig(path string) error {
-
-	if f, err := os.Open(path); err != nil {
+func InitConfig(path string) {
+	f, err := os.Open(path)
+	defer f.Close()
+	if err != nil {
 		log.Errorf("Init config Error : %v", err)
-		return err
 	} else {
 		yaml.NewDecoder(f).Decode(Config)
 	}
-	return nil
 }
-func InitAll() error {
-	if err := InitConfig("config/config.yaml"); err != nil {
-		return err
-	}
-
-	return nil
+func init() {
+	InitConfig("config/config.yml")
 }
