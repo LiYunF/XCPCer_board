@@ -1,4 +1,4 @@
-package redis
+package Redis
 
 import (
 	"XCPCer_board/config"
@@ -7,17 +7,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var Db *redis.Client
+var Rdb *redis.Client
 
 // 初始化连接
 func init() {
 	red := config.Config.Database.RedisConf
-	Db = redis.NewClient(&redis.Options{
+	Rdb = redis.NewClient(&redis.Options{
 		Addr:     red.Host,
 		Password: red.Password, // no password set
 		DB:       0,            // use default DB
 	})
-	_, err := Db.Ping(context.TODO()).Result()
+	_, err := Rdb.Ping(context.TODO()).Result()
 	if err != nil {
 		log.Errorf("Open Redis Error:%v", err)
 	}
