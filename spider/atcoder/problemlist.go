@@ -18,7 +18,6 @@ var (
 	problemScraper *scraper.Scraper[submission]
 	contestId      string
 	userId         string
-	pageSum        int
 )
 
 // shubmission 信息

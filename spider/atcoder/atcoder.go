@@ -3,10 +3,11 @@ package atcoder
 import (
 	"XCPCer_board/scraper"
 	"fmt"
+	"strconv"
 )
 
 //ScrapeAll 拉取个人主页
-func ScrapeAll(uid string) (map[string]int, error) {
+func ScrapeAllProfile(uid string) (map[string]int, error) {
 	// 请求所有并合并所有
 	res, err := scraper.MergeAllResults[string, int](
 		FetchMainPage(uid),
@@ -18,7 +19,6 @@ func ScrapeAll(uid string) (map[string]int, error) {
 	return res, nil
 }
 
-//合并submission
 func ScrapeSubmission(uid string) (map[string]submission, error) {
 
 	resCid, errC := ScrapeCid()
@@ -28,6 +28,8 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 	}
 
 	//resCid := map[string]string{"1": "abc248"}
+
+	//fmt.Println(resCid)
 
 	var res map[string]submission
 	res = make(map[string]submission)
@@ -51,23 +53,25 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 
 }
 
-// 获得 contestUrl
 func ScrapeCid() (map[string]string, error) {
 	// 请求所有并合并所有
 
-	res, err := scraper.MergeAllResults[string, string](
-		FetchContestPage("1"),
-		FetchContestPage("2"),
-		FetchContestPage("3"),
-		FetchContestPage("4"),
-		FetchContestPage("5"),
-		FetchContestPage("6"),
-		FetchContestPage("7"),
-		FetchContestPage("8"),
-		FetchContestPage("9"),
-	)
-	if err != nil {
-		return nil, err
+	pageSums = 9
+
+	var res map[string]string
+	res = make(map[string]string)
+
+	for pageNum := 1; pageNum <= pageSums; pageNum++ {
+		pNum := strconv.Itoa(pageNum)
+		ans, err := scraper.MergeAllResults[string, string](
+			FetchContestPage(pNum),
+		)
+		if err != nil {
+			return nil, err
+		}
+		for k, v := range ans {
+			res[k] = v
+		}
 	}
 	return res, nil
 }

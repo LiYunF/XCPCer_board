@@ -2,6 +2,7 @@ package atcoder
 
 import (
 	"XCPCer_board/scraper"
+	"fmt"
 	"github.com/gocolly/colly"
 	"strconv"
 	"strings"
@@ -17,7 +18,10 @@ const (
 
 var (
 	contestScraper *scraper.Scraper[string]
+	flag           bool
+	pageSums       int
 	Page           string
+	num            = 1
 )
 
 // 初始化
@@ -31,10 +35,11 @@ func init() {
 //处理 contestHistory 的页面回调
 func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	//用goquery
-	num := 1
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
+
 		str := strconv.Itoa(num)
-		res.Set(contestKey+"_"+Page+"_"+str, getAtCoderContestId(element))
+		fmt.Println(str)
+		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
 		num = num + 1
 	})
 }
@@ -42,7 +47,9 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 //获取 userID
 func getAtCoderPageUrl(page string) string {
 	//fmt.Println("https://atcoder.jp/contests/archive?page=" + page)
+
 	return "https://atcoder.jp/contests/archive?page=" + page
+
 }
 
 //获取 contestId
