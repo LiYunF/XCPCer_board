@@ -2,8 +2,8 @@ package main
 
 import (
 	"XCPCer_board/config"
+	_ "XCPCer_board/db/Redis"
 	_ "XCPCer_board/db/mysql"
-	_ "XCPCer_board/db/redis"
 	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
