@@ -2,7 +2,7 @@ package luogu
 
 import (
 	_ "XCPCer_board/config"
-	_ "XCPCer_board/db/mysql"
+	_ "XCPCer_board/dao/mysql"
 	"XCPCer_board/model"
 	"fmt"
 	"testing"

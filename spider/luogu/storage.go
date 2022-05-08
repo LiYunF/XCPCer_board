@@ -1,7 +1,7 @@
 package luogu
 
 import (
-	"XCPCer_board/db/Redis"
+	"XCPCer_board/dao"
 	"context"
 	"fmt"
 	log "github.com/sirupsen/logrus"
@@ -27,7 +27,7 @@ func SetUserMsgToRedis(uid string, ctx context.Context) error {
 	}
 
 	//set data to redis
-	err = Redis.Rdb.MSet(ctx, mapKey).Err()
+	err = dao.redisClient.MSet(ctx, mapKey).Err()
 	if err != nil {
 		log.Errorf("set redis data for uid=%v failed, err:%v\n", uid, err)
 		return err
