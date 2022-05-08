@@ -7,7 +7,7 @@ import (
 
 var atcTestData = map[string]int{
 	"atc_contest_sum": 6,
-	" atc_rank":       16656,
+	"atc_rank":        16656,
 	"atc_rating":      785,
 }
 

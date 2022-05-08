@@ -22,7 +22,7 @@ var (
 
 // shubmission 信息
 type submission struct {
-	userid string
+	userid string //用户名
 	SMid   string //提交编号
 	CTid   string //比赛编号
 	task   string //题目序号

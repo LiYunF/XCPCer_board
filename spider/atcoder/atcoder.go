@@ -6,9 +6,9 @@ import (
 	"strconv"
 )
 
-//ScrapeAllProfile 拉取个人主页
+//ScrapeAllProfile 拉取个人主页信息
 func ScrapeAllProfile(uid string) (map[string]int, error) {
-	// 请求所有并合并所有
+
 	res, err := scraper.MergeAllResults[string, int](
 		FetchMainPage(uid),
 	)
@@ -19,7 +19,7 @@ func ScrapeAllProfile(uid string) (map[string]int, error) {
 	return res, nil
 }
 
-//ScrapeSubmission 拉取所以submission信息
+//ScrapeSubmission 拉取所有submission信息
 func ScrapeSubmission(uid string) (map[string]submission, error) {
 
 	resCid, errC := ScrapeCid()
@@ -35,7 +35,9 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 	var res map[string]submission
 	res = make(map[string]submission)
 
+	//遍历contest
 	for _, id := range resCid {
+		//特判无权限比赛
 		if id == "asprocon8" {
 			continue
 		}
@@ -45,6 +47,8 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 		if errCon != nil {
 			return nil, errCon
 		}
+
+		//合并map
 		for k, v := range resCon {
 			res[k] = v
 		}
@@ -63,6 +67,7 @@ func ScrapeCid() (map[string]string, error) {
 	var res map[string]string
 	res = make(map[string]string)
 
+	// 访问 contestPage 的页面
 	for pageNum := 1; pageNum <= pageSums; pageNum++ {
 		pNum := strconv.Itoa(pageNum)
 		ans, err := scraper.MergeAllResults[string, string](

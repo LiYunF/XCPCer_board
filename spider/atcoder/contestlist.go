@@ -2,7 +2,6 @@ package atcoder
 
 import (
 	"XCPCer_board/scraper"
-	"fmt"
 	"github.com/gocolly/colly"
 	"strconv"
 	"strings"
@@ -13,7 +12,6 @@ const (
 	contestKey = "atc_contest_id"
 
 	//keyword
-
 )
 
 var (
@@ -38,7 +36,7 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	})
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
 		str := strconv.Itoa(num)
-		fmt.Println(str)
+		//fmt.Println(str)
 		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
 		num = num + 1
 	})
