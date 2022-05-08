@@ -37,16 +37,16 @@ func init() {
 	)
 }
 
-//处理 acProblem 的页面回调
+//problemCallback 处理 acProblem 的页面回调
 func problemCallback(c *colly.Collector, res *scraper.Results[submission]) {
 	num := 1
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
 		res.Set(submissionKey+"_"+contestId+"_"+strconv.Itoa(num), getAtcSubMsg(element))
 		num = num + 1
 	})
-
 }
 
+// getAtcSubMsg 获取每条submission信息
 func getAtcSubMsg(e *colly.HTMLElement) submission {
 
 	task := e.DOM.Find("td:nth-child(2)").First().Text()
@@ -64,7 +64,7 @@ func getAtcSubMsg(e *colly.HTMLElement) submission {
 	return submission{userId, SMid, contestId, task, score}
 }
 
-//获取 userID
+//getAtCoderUrl 获取 userID
 func getAtCoderUrl(atCoderId string, contestId string) string {
 	//fmt.Println("https://atcoder.jp" + contestId + "/submissions?f.User=" + atCoderId + "&f.Status=AC")
 	return "https://atcoder.jp/contests/" + contestId + "/submissions?f.User=" + atCoderId + "&f.Status=AC"
@@ -74,8 +74,7 @@ func getAtCoderUrl(atCoderId string, contestId string) string {
 // 对外暴露函数
 //-------------------------------------------------------------------------------------------//
 
-//FetchMainPage 抓取个人主页页面所有
-
+//FetchProblemSum 抓取提交页面所有
 func FetchProblemSum(uid string, cid string) scraper.Results[submission] {
 	contestId = cid
 	userId = uid

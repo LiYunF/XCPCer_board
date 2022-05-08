@@ -16,5 +16,4 @@ func main() {
 	//mysql.InitDB()
 	//fmt.Println(luogu.InsertSql(model.TestLuoGuIdLYF))
 	fmt.Println(atcoder.ScrapeSubmission(model.TestAtcIdLQY))
-
 }

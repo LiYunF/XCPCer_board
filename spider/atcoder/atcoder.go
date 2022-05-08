@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-//ScrapeAll 拉取个人主页
+//ScrapeAllProfile 拉取个人主页
 func ScrapeAllProfile(uid string) (map[string]int, error) {
 	// 请求所有并合并所有
 	res, err := scraper.MergeAllResults[string, int](
@@ -19,6 +19,7 @@ func ScrapeAllProfile(uid string) (map[string]int, error) {
 	return res, nil
 }
 
+//ScrapeSubmission 拉取所以submission信息
 func ScrapeSubmission(uid string) (map[string]submission, error) {
 
 	resCid, errC := ScrapeCid()
@@ -53,10 +54,11 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 
 }
 
+// ScrapeCid 获得contestId
 func ScrapeCid() (map[string]string, error) {
 	// 请求所有并合并所有
 
-	pageSums = 9
+	pageSums = 1
 
 	var res map[string]string
 	res = make(map[string]string)

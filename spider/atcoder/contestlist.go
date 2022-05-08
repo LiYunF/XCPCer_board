@@ -18,9 +18,7 @@ const (
 
 var (
 	contestScraper *scraper.Scraper[string]
-	flag           bool
 	pageSums       int
-	Page           string
 	num            = 1
 )
 
@@ -32,11 +30,13 @@ func init() {
 	)
 }
 
-//处理 contestHistory 的页面回调
+//contestCallback 处理 contestHistory 的页面回调
 func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	//用goquery
+	c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]", func(element *colly.HTMLElement) {
+		getContestPage(element)
+	})
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
-
 		str := strconv.Itoa(num)
 		fmt.Println(str)
 		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
@@ -44,15 +44,24 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	})
 }
 
-//获取 userID
+//getAtCoderPageUrl 获取 userID
 func getAtCoderPageUrl(page string) string {
 	//fmt.Println("https://atcoder.jp/contests/archive?page=" + page)
-
 	return "https://atcoder.jp/contests/archive?page=" + page
 
 }
 
-//获取 contestId
+//getContestPage 获取总页数
+func getContestPage(e *colly.HTMLElement) {
+	ret := e.DOM.Find("li:last-child").First().Text()
+	num, err := strconv.Atoi(ret)
+	if err != nil {
+		pageSums = 0
+	}
+	pageSums = num
+}
+
+//getAtCoderContestId 获取 contestId
 func getAtCoderContestId(e *colly.HTMLElement) string {
 	//fmt.Println(e.DOM.Find("td:nth-child(2) a").First().Text())
 	link := e.ChildAttr("td:nth-child(2) a", "href")
@@ -65,9 +74,8 @@ func getAtCoderContestId(e *colly.HTMLElement) string {
 // 对外暴露函数
 //-------------------------------------------------------------------------------------------//
 
-//FetchMainPage 抓取个人主页页面所有
+//FetchMainPage 抓取比赛主页页面所有比赛ID
 
 func FetchContestPage(page string) scraper.Results[string] {
-	Page = page
 	return contestScraper.Scrape(getAtCoderPageUrl(page))
 }
