@@ -41,7 +41,7 @@ func init() {
 func problemCallback(c *colly.Collector, res *scraper.Results[submission]) {
 	num := 1
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
-		res.Set(submissionKey+"_"+contestId+"_"+strconv.Itoa(num), getAtcSubMsg(element))
+		res.Set(submissionKey+"_"+strconv.Itoa(num), getAtcSubMsg(element))
 		num = num + 1
 	})
 }
@@ -49,13 +49,12 @@ func problemCallback(c *colly.Collector, res *scraper.Results[submission]) {
 // getAtcSubMsg 获取每条submission信息
 func getAtcSubMsg(e *colly.HTMLElement) submission {
 
-	task := e.DOM.Find("td:nth-child(2)").First().Text()
-	task = strings.Split(task, "")[0]
+	task := strings.Split(e.DOM.Find("td:nth-child(2)").First().Text(), "")[0]
 
 	score, errSc := strconv.Atoi(e.DOM.Find("td:nth-child(5)").First().Text())
 
-	SMid := e.ChildAttr("td:nth-child(10) a", "href")
-	SMid = strings.Split(SMid, "/")[4]
+	SMid := strings.Split(e.ChildAttr("td:nth-child(10) a", "href"), "/")[4]
+
 	//fmt.Println(SMid)
 	if errSc != nil {
 		return submission{userId, "-1", contestId, task, -1}
