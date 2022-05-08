@@ -18,6 +18,11 @@
 .idea
 
 #Database
-docker/mysql/
+config/docker/mysql/datadir
+config/docker/mysql/mydir
+config/docker/mysql/source
+
+*.yaml
+
 #log
 log/
