@@ -8,8 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var MySql *sql.DB
-
+var Db *sql.DB
 
 //初始化数据库的函数
 func init() {
@@ -26,10 +25,10 @@ func init() {
 
 	if err != nil {
 		log.Errorf("Open Sql Error: %v", err)
-		return err
+
 	}
 	//fmt.Println("成功打开MYSQL")
-	MySql.SetMaxOpenConns(20)
-	MySql.SetMaxIdleConns(10)
-	return nil
+	Db.SetMaxOpenConns(20)
+	Db.SetMaxIdleConns(10)
+
 }

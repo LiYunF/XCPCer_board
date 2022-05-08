@@ -66,7 +66,6 @@ func checkSub(t *testing.T, uid string, ans string) {
 
 func UserTest(t *testing.T) {
 	//开始测试
-
 	checkIntError(t, model.TestLuoGuIdLYF, "luoGu", ScrapeUser, map[string]int{
 		basicProblem:      30,
 		elevatedProblem:   19,
