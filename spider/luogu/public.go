@@ -1,7 +1,6 @@
 package luogu
 
 import (
-	"github.com/PuerkitoBio/goquery"
 	log "github.com/sirupsen/logrus"
 	"strconv"
 )
@@ -24,6 +23,9 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
+var UserKeyWordList = []string{passProblemNumber, ranting,
+	simpleProblem, basicProblem, elevatedProblem, hardProblem, unKnowProblem}
+
 const (
 ////////submission/////////
 //题号
@@ -40,8 +42,7 @@ func getPersonPractice(uid string) string {
 
 //字符转int
 
-func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
-	ret := f(doc)
+func strToInt(ret string) int {
 	num, err := strconv.Atoi(ret)
 	if err != nil {
 		log.Errorf("luogu strToInt get err:%v\tand the return is %v:", num, err)
