@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	////////////////user//////////////////
 	//过题数
 	luoGuPersonPassProblemNumber = "lg_problem_number"
 	//排名
@@ -23,6 +24,24 @@ const (
 	luoGuUnKnowProblemNumber = "unKnow_problem_number"
 )
 
+
+const (
+////////submission/////////
+//题号
+
+)
+
+//获取网页函数
+func getPersonPage(uid string) string {
+	return "https://www.luogu.com.cn/user/" + uid
+}
+func getPersonPractice(uid string) string {
+	return getPersonPage(uid) + "#practice"
+}
+
+//字符转int
+
+
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
 	num, err := strconv.Atoi(ret)
@@ -32,9 +51,4 @@ func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int
 	}
 	return num
 }
-func getPersonPage(uid string) string {
-	return "https://www.luogu.com.cn/user/" + uid
-}
-func getPersonPractice(uid string) string {
-	return getPersonPage(uid) + "#practice"
-}
+

@@ -76,6 +76,65 @@ func intCallback(c *colly.Collector, res *scraper.Results[int]) {
 	})
 }
 
-func GetStrMsg(uid string) scraper.Results[int] {
+//////////////////////////////////////
+///////////    对外暴露     ///////////
+//////////////////////////////////////
+
+// GetUserMsg  获取用户信息
+func GetUserMsg(uid string) scraper.Results[int] {
 	return intScraper.Scrape(getPersonPractice(uid))
+}
+
+type UserMsg struct {
+	Uid               string
+	PassProblemNumber int
+	Ranting           int
+	SimpleProblem     int
+	BasicProblem      int
+	ElevatedProblem   int
+	HardProblem       int
+	UnKnowProblem     int
+}
+
+//StructToMap 结构体转Map
+func StructToMap(user UserMsg) (map[string]int, string) {
+	var mp map[string]int
+	mp[passProblemNumber] = user.PassProblemNumber
+	mp[ranting] = user.Ranting
+	mp[simpleProblem] = user.SimpleProblem
+	mp[basicProblem] = user.BasicProblem
+	mp[elevatedProblem] = user.ElevatedProblem
+	mp[hardProblem] = user.HardProblem
+	mp[unKnowProblem] = user.UnKnowProblem
+	return mp, user.Uid
+}
+
+//MapToStruct Map转结构体, 返回的bool=1为正常，0为map里没有该值
+func MapToStruct(mp map[string]int) (UserMsg, bool) {
+
+	var user UserMsg
+	var ok bool
+
+	if user.PassProblemNumber, ok = mp[passProblemNumber]; !ok {
+		return user, ok
+	}
+	if user.Ranting, ok = mp[ranting]; !ok {
+		return user, ok
+	}
+	if user.SimpleProblem, ok = mp[simpleProblem]; !ok {
+		return user, ok
+	}
+	if user.BasicProblem, ok = mp[basicProblem]; !ok {
+		return user, ok
+	}
+	if user.ElevatedProblem, ok = mp[elevatedProblem]; !ok {
+		return user, ok
+	}
+	if user.HardProblem, ok = mp[hardProblem]; !ok {
+		return user, ok
+	}
+	if user.UnKnowProblem, ok = mp[unKnowProblem]; !ok {
+		return user, ok
+	}
+	return user, true
 }
