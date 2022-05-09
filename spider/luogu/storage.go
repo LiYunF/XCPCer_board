@@ -55,7 +55,7 @@ func GetUserMsgFromRedis(uid string, keyWord string, ctx context.Context) (int, 
 	return num, nil
 }
 
-//GetUserAllMsgFromRedis
+//GetUserAllMsgFromRedis 获取用户的所有数据
 func GetUserAllMsgFromRedis(uid string, ctx context.Context) (map[string]int, error) {
 
 	mp := make(map[string]int)
@@ -83,5 +83,4 @@ func GetUserAllMsgFromRedis(uid string, ctx context.Context) (map[string]int, er
 
 func getUserIDRedisKey(uid string, key any) string {
 	return fmt.Sprintf("luogu_id_%v_%v", uid, key)
-
 }

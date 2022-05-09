@@ -18,14 +18,9 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
+//UserList 用户keyWord列表
 var UserList = []string{passProblemNumber, ranting, simpleProblem,
 	basicProblem, elevatedProblem, hardProblem, unKnowProblem}
-
-const (
-////////submission/////////
-//题号
-
-)
 
 //获取网页函数
 func getPersonPage(uid string) string {
