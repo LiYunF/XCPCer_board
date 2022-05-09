@@ -17,7 +17,6 @@ var (
 	problemScraper *scraper.Scraper[submission]
 	contestId      string
 	userId         string
-	flag           string
 )
 
 // submission 信息
