@@ -1,10 +1,5 @@
 package luogu
 
-import (
-	log "github.com/sirupsen/logrus"
-	"strconv"
-)
-
 const (
 	////////////////user//////////////////
 	//过题数
@@ -23,14 +18,9 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
-var UserKeyWordList = []string{passProblemNumber, ranting,
-	simpleProblem, basicProblem, elevatedProblem, hardProblem, unKnowProblem}
-
-const (
-////////submission/////////
-//题号
-
-)
+//UserList 用户keyWord列表
+var UserList = []string{passProblemNumber, ranting, simpleProblem,
+	basicProblem, elevatedProblem, hardProblem, unKnowProblem}
 
 //获取网页函数
 func getPersonPage(uid string) string {
@@ -40,13 +30,3 @@ func getPersonPractice(uid string) string {
 	return getPersonPage(uid) + "#practice"
 }
 
-//字符转int
-
-func strToInt(ret string) int {
-	num, err := strconv.Atoi(ret)
-	if err != nil {
-		log.Errorf("luogu strToInt get err:%v\tand the return is %v:", num, err)
-		return -1
-	}
-	return num
-}

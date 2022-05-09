@@ -2,46 +2,60 @@ package atcoder
 
 import (
 	"XCPCer_board/scraper"
+	"fmt"
+	"strconv"
 )
 
-//ScrapeAll 拉取所有结果
-func ScrapeAll(uid string) (map[string]int, error) {
-	// 请求所有并合并所有
+//ScrapeAllProfile 拉取个人主页信息
+func ScrapeAllProfile(uid string) (map[string]int, error) {
 	res, err := scraper.MergeAllResults[string, int](
 		FetchMainPage(uid),
 	)
 	if err != nil {
 		return nil, err
 	}
-
-	allCid, _ := ScrapeCid(uid)
-
-	//fmt.Println(allCid)
-
-	for _, cid := range allCid {
-		_, err := scraper.MergeAllResults[string, int](
-			FetchProblemSum(uid, cid),
-		)
-		//fmt.Println(cRes)
-		if err != nil {
-			return nil, err
-		}
-
-	}
-	res["atc_problem_sums"] = len(problemMap)
-
 	return res, nil
-
 }
 
-// 获得 contestUrl
-func ScrapeCid(uid string) (map[string]string, error) {
-	// 请求所有并合并所有
-	res, err := scraper.MergeAllResults[string, string](
-		FetchContestHistory(uid),
-	)
+//ScrapeSubmission 拉取所有submission信息
+func ScrapeSubmission(uid string) (map[string]submission, error) {
+	resCid, errC := ScrapeCid()
+	if errC != nil {
+		return nil, errC
+	}
+
+	//遍历contest
+	var res []scraper.Results[submission]
+	for _, id := range resCid {
+		//特判无权限比赛
+		if id == "asprocon8" {
+			continue
+		}
+		res = append(res, FetchProblemSum(uid, id))
+	}
+	//fmt.Println(len(res))
+	ans, err := scraper.MergeAllResults[string, submission](res...)
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	fmt.Println(len(ans))
+	return ans, err
+
+}
+
+// ScrapeCid 获得contestId
+func ScrapeCid() (map[string]string, error) {
+	pageSums = 1
+	var res []scraper.Results[string]
+
+	// 访问 contestPage 的页面
+	for pageNum := 1; pageNum <= pageSums; pageNum++ {
+		pNum := strconv.Itoa(pageNum)
+		res = append(res, FetchContestPage(pNum))
+	}
+	ans, err := scraper.MergeAllResults[string, string](res...)
+	if err != nil {
+		return nil, err
+	}
+	return ans, nil
 }
