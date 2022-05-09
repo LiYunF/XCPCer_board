@@ -10,7 +10,6 @@ import (
 const (
 	//key
 	contestKey = "atc_contest_id"
-
 	//keyword
 )
 
@@ -44,7 +43,6 @@ func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 
 //getAtCoderPageUrl 获取 userID
 func getAtCoderPageUrl(page string) string {
-	//fmt.Println("https://atcoder.jp/contests/archive?page=" + page)
 	return "https://atcoder.jp/contests/archive?page=" + page
 
 }
@@ -61,7 +59,6 @@ func getContestPage(e *colly.HTMLElement) {
 
 //getAtCoderContestId 获取 contestId
 func getAtCoderContestId(e *colly.HTMLElement) string {
-	//fmt.Println(e.DOM.Find("td:nth-child(2) a").First().Text())
 	link := e.ChildAttr("td:nth-child(2) a", "href")
 	link = strings.Split(link, "/")[2]
 	//fmt.Println(link)

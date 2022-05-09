@@ -22,8 +22,6 @@ const (
 	rankKey       = "atc_rank"
 
 	//keyword
-
-	//RatingKeyword = "Rank"
 )
 
 var (
@@ -50,7 +48,6 @@ func mainCallback(c *colly.Collector, res *scraper.Results[int]) {
 
 //getAtCoderBaseUrl 获取个人主页URL
 func getAtCoderBaseUrl(atCoderId string) string {
-	//fmt.Println("test")
 	return "https://atcoder.jp/users/" + atCoderId
 }
 

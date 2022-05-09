@@ -9,18 +9,18 @@ import (
 
 const (
 	//key
-	submissionKey = "submission_msg"
+	submissionKey = "submission"
 	//keyword
-
 )
 
 var (
 	problemScraper *scraper.Scraper[submission]
 	contestId      string
 	userId         string
+	flag           string
 )
 
-// shubmission 信息
+// submission 信息
 type submission struct {
 	userid string //用户名
 	SMid   string //提交编号
@@ -39,10 +39,9 @@ func init() {
 
 //problemCallback 处理 acProblem 的页面回调
 func problemCallback(c *colly.Collector, res *scraper.Results[submission]) {
-	num := 1
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
-		res.Set(submissionKey+"_"+strconv.Itoa(num), getAtcSubMsg(element))
-		num = num + 1
+		tmp := getAtcSubMsg(element)
+		res.Set(submissionKey+"_"+contestId+"_"+tmp.task, tmp)
 	})
 }
 
@@ -55,7 +54,6 @@ func getAtcSubMsg(e *colly.HTMLElement) submission {
 
 	SMid := strings.Split(e.ChildAttr("td:nth-child(10) a", "href"), "/")[4]
 
-	//fmt.Println(SMid)
 	if errSc != nil {
 		return submission{userId, "-1", contestId, task, -1}
 	}
@@ -65,7 +63,6 @@ func getAtcSubMsg(e *colly.HTMLElement) submission {
 
 //getAtCoderUrl 获取 userID
 func getAtCoderUrl(atCoderId string, contestId string) string {
-	//fmt.Println("https://atcoder.jp" + contestId + "/submissions?f.User=" + atCoderId + "&f.Status=AC")
 	return "https://atcoder.jp/contests/" + contestId + "/submissions?f.User=" + atCoderId + "&f.Status=AC"
 }
 
