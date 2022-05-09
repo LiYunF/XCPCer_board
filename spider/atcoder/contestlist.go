@@ -4,18 +4,19 @@ import (
 	"XCPCer_board/scraper"
 	"github.com/gocolly/colly"
 	"strconv"
+	"strings"
 )
 
 const (
 	//key
 	contestKey = "atc_contest_id"
-
 	//keyword
-
 )
 
 var (
 	contestScraper *scraper.Scraper[string]
+	pageSums       int
+	num            = 1
 )
 
 // 初始化
@@ -26,26 +27,40 @@ func init() {
 	)
 }
 
-//处理 contestHistory 的页面回调
+//contestCallback 处理 contestHistory 的页面回调
 func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
 	//用goquery
-	num := 1
-
-	c.OnHTML("td[class=\"text-left\"]", func(element *colly.HTMLElement) {
+	c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]", func(element *colly.HTMLElement) {
+		getContestPage(element)
+	})
+	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
 		str := strconv.Itoa(num)
+		//fmt.Println(str)
 		res.Set(contestKey+"_"+str, getAtCoderContestId(element))
 		num = num + 1
 	})
 }
 
-//获取 userID
-func getAtCoderHistoryUrl(atCoderId string) string {
-	return "https://atcoder.jp/users/" + atCoderId + "/history"
+//getAtCoderPageUrl 获取 userID
+func getAtCoderPageUrl(page string) string {
+	return "https://atcoder.jp/contests/archive?page=" + page
+
 }
 
-//获取 contestId
+//getContestPage 获取总页数
+func getContestPage(e *colly.HTMLElement) {
+	ret := e.DOM.Find("li:last-child").First().Text()
+	num, err := strconv.Atoi(ret)
+	if err != nil {
+		pageSums = 0
+	}
+	pageSums = num
+}
+
+//getAtCoderContestId 获取 contestId
 func getAtCoderContestId(e *colly.HTMLElement) string {
-	link := e.ChildAttr("a:first-child", "href")
+	link := e.ChildAttr("td:nth-child(2) a", "href")
+	link = strings.Split(link, "/")[2]
 	//fmt.Println(link)
 	return link
 }
@@ -54,8 +69,8 @@ func getAtCoderContestId(e *colly.HTMLElement) string {
 // 对外暴露函数
 //-------------------------------------------------------------------------------------------//
 
-//FetchMainPage 抓取个人主页页面所有
+//FetchMainPage 抓取比赛主页页面所有比赛ID
 
-func FetchContestHistory(uid string) scraper.Results[string] {
-	return contestScraper.Scrape(getAtCoderHistoryUrl(uid))
+func FetchContestPage(page string) scraper.Results[string] {
+	return contestScraper.Scrape(getAtCoderPageUrl(page))
 }
