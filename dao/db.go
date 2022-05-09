@@ -17,7 +17,8 @@ func init() {
 	// 判断是否存在配置
 	mysqlConfig, ok := config.Conf.Storages[mysqlDriver]
 	if !ok {
-		panic(fmt.Errorf("lack of mysql Conf"))
+		log.Errorf("lack of mysql config")
+		return
 	}
 	// 初始化连接
 	var err error

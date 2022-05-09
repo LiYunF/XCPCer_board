@@ -63,11 +63,6 @@ func defaultCallback[V any]() func(*colly.Collector, *Results[V]) {
 			var v V
 			res.Set("Default Callback 1", v)
 		})
-		c.OnScraped(func(r *colly.Response) {
-			fmt.Println(string(r.Body))
-			var v V
-			res.Set("Default Callback 2", v)
-		})
 	}
 }
 

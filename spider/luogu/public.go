@@ -39,7 +39,6 @@ func getPersonPractice(uid string) string {
 }
 
 //字符转int
-
 func strToInt(doc *goquery.Selection, f func(doc *goquery.Selection) string) int {
 	ret := f(doc)
 	num, err := strconv.Atoi(ret)

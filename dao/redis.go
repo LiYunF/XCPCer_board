@@ -3,7 +3,6 @@ package dao
 import (
 	"XCPCer_board/config"
 	"context"
-	"fmt"
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 )
@@ -17,7 +16,8 @@ func init() {
 	// 获取配置
 	redisConfig, ok := config.Conf.Storages[redisDriver]
 	if !ok {
-		panic(fmt.Errorf("lack of redis config"))
+		log.Errorf("lack of redis config")
+		return
 	}
 	// 初始化
 	RedisClient = redis.NewClient(&redis.Options{
