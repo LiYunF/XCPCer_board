@@ -12,7 +12,7 @@ func init() {
 	defer f.Close()
 	if err != nil {
 		log.Errorf("Init config Error %v", err)
-		panic(err)
+		return
 	}
 	// 解构
 	err = yaml.NewDecoder(f).Decode(&Conf)
@@ -24,7 +24,7 @@ func init() {
 
 var (
 	Conf       = Config{}
-	configPath = "./config/config.yml"
+	configPath = "./config/config.yaml"
 )
 
 type Storage struct {

@@ -2,7 +2,7 @@ package luogu
 
 import (
 	_ "XCPCer_board/config"
-	_ "XCPCer_board/dao/mysql"
+	_ "XCPCer_board/dao"
 	"XCPCer_board/model"
 	"fmt"
 	"testing"
@@ -38,6 +38,7 @@ func checkIntError(t *testing.T, uid string, tp string, all func(uid string) (ma
 		t.Errorf("Error of %v in all msg\n ret= %v  \nbut the ans is %v", tp, ret, acInt)
 	}
 }
+
 func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (map[string]string, error),
 	acInt map[string]string) {
 	if ret, err := all(uid); isStringMsgDifferent(ret, acInt) {

@@ -1,7 +1,7 @@
 package codeforcesv2
 
 import (
-	"XCPCer_board/db/mysql"
+	"XCPCer_board/dao"
 )
 
 /*
@@ -25,7 +25,7 @@ var (
 
 //人与题目相关联写一个查询函数返回 账号&codeforces过题总数
 func userSumNumber() (map[string]int, error) {
-	db := mysql.Db
+	db := dao.DbClient
 	str := "select `user_id` ,count(*) from codeforces group by `user_id` order by count(*);"
 	qry, err := db.Query(str)
 	if err != nil {
@@ -43,7 +43,7 @@ func userSumNumber() (map[string]int, error) {
 
 //人与难度相关联再来写一个查询函数返回map
 func userRatingProblem() (map[string]rate, error) {
-	db := mysql.Db
+	db := dao.DbClient
 	str := "select `user_id`,`rating` from codeforces"
 	qry, err := db.Query(str)
 	if err != nil {
