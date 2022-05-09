@@ -34,3 +34,4 @@ func getPersonPage(uid string) string {
 func getPersonPractice(uid string) string {
 	return getPersonPage(uid) + "#practice"
 }
+

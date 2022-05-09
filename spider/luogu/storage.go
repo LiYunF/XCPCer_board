@@ -24,13 +24,13 @@ func SetUserMsgToRedis(uid string, ctx context.Context) error {
 	}
 
 	//set data to redis
-
 	for key, val := range mapKey {
 		err := dao.RedisClient.Set(ctx, key, val, 0).Err()
 		if err != nil {
 			log.Errorf("set redis data for uid=%v failed, err:%v\n", uid, err)
 			return err
 		}
+
 	}
 
 	return nil
