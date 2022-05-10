@@ -18,8 +18,8 @@ const (
 	unKnowProblem = "unKnow_problem_number"
 )
 
-//UserList 用户keyWord列表
-var UserList = []string{passProblemNumber, ranting, simpleProblem,
+//KeyWordListOfUser 用户keyWord常量列表
+var KeyWordListOfUser = []string{passProblemNumber, ranting, simpleProblem,
 	basicProblem, elevatedProblem, hardProblem, unKnowProblem}
 
 //获取网页函数
@@ -29,4 +29,3 @@ func getPersonPage(uid string) string {
 func getPersonPractice(uid string) string {
 	return getPersonPage(uid) + "#practice"
 }
-
