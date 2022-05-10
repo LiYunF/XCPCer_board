@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	packageName = "vJudge"
+	packageName = "vjudge"
 )
 
 //SetUserMsgToRedis 将用户信息放入redis
