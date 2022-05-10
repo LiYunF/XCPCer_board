@@ -1,58 +1,64 @@
 package vjudge
 
 import (
+	_ "XCPCer_board/config"
+	_ "XCPCer_board/dao"
 	"XCPCer_board/model"
 	"testing"
 )
 
-//检查函数，若不一致返回1
-func isIntMsgDifferent(funcRet, ans map[string]int) bool {
-	for k, v := range ans {
-		if _, r := funcRet[k]; r == false || v != funcRet[k] {
-			return true
-		}
-	}
-	return false
-}
-func isStringMsgDifferent(funcRet, ans map[string]string) bool {
-	for k, v := range ans {
-		if _, r := funcRet[k]; r == false || v != funcRet[k] {
-			return true
-		}
-	}
-	return false
+////////////////////////////////////////////////////
+///////////////////  测试用例  //////////////////////
+////////////////////////////////////////////////////
+const (
+	testPackage = "vJudge"
+)
+
+type userExample struct {
+	msg map[string]int
 }
 
-//判断并输出错误
-func checkIntError(t *testing.T, uid string, tp string, all func(uid string) (map[string]int, error),
-	acInt map[string]int) {
-	if ret, err := all(uid); isIntMsgDifferent(ret, acInt) {
+//userSet 用户集合
+var userSet = map[string]userExample{
+	model.TestVJIdLYF: userExample{
+		msg: map[string]int{
+			last24HoursNumber: 0,
+			last7DaysNumber:   0,
+			last30DaysNumber:  0,
+			totalNumber:       30,
+		},
+	},
+}
+
+////////////////////////////////////////////////////
+///////////////////  主测试函数  /////////////////////
+////////////////////////////////////////////////////
+
+//UserMsgTest 用户信息测试函数
+func UserMsgTest(t *testing.T) {
+
+	//test ScrapeUser
+	for uid, correctMsg := range userSet {
+		//get msg
+		funcRet, err := ScrapeUser(uid)
 		if err != nil {
-			t.Errorf("Error of %v in all msg: %v", tp, err)
+			t.Errorf("Errorin all msg: %v", err)
 		}
-		t.Errorf("Error of %v in all msg\n ret= %v  \nbut the ans is %v", tp, ret, acInt)
-	}
-}
-func checkStrError(t *testing.T, uid string, tp string, all func(uid string) (map[string]string, error),
-	acInt map[string]string) {
-	if ret, err := all(uid); isStringMsgDifferent(ret, acInt) {
-		if err != nil {
-			t.Errorf("Error of %v in all msg: %v", tp, err)
+		//check map
+		if len(correctMsg.msg) != len(funcRet) {
+			t.Errorf("Errorin all msg\n ret= %v  \nbut the ans is %v", funcRet, correctMsg.msg)
 		}
-		t.Errorf("Error of %v in str msg\n ret= %v  \nbut the ans is %v", tp, ret, acInt)
+		for k, v := range correctMsg.msg {
+			if _, r := funcRet[k]; r == false || v != funcRet[k] {
+				t.Errorf("Error in all msg\n ret= %v  \nbut the ans is %v", funcRet, correctMsg.msg)
+			}
+		}
 	}
-}
-func vjTest(t *testing.T) {
-	//开始测试
-	checkIntError(t, model.TestVJIdLYF, "vJudge", ScrapeAll, map[string]int{
-		"vj_Person_Last_24_Hours_Pass_Number": 0,
-		"vj_Person_Last_30_Days_Pass_Number":  0,
-		"vj_Person_Last_7_Days_Pass_Number":   0,
-		"vj_Person_Pass_Number":               30,
-	})
 
 }
 
-func TestVj(t *testing.T) {
-	vjTest(t)
+//TestLg luoGu总测试函数
+func TestLg(t *testing.T) {
+	UserMsgTest(t)
+	//SubmissionTest(t)
 }

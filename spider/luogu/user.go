@@ -85,6 +85,7 @@ func GetUserMsg(uid string) scraper.Results[int] {
 	return intScraper.Scrape(getPersonPractice(uid))
 }
 
+//UserMsg 用户信息结构体 ，暂时无用
 type UserMsg struct {
 	Uid               string
 	PassProblemNumber int
@@ -96,7 +97,7 @@ type UserMsg struct {
 	UnKnowProblem     int
 }
 
-//StructToMap 结构体转Map
+//StructToMap 结构体转Map，暂时无用
 func StructToMap(user UserMsg) (map[string]int, string) {
 	var mp map[string]int
 	mp[passProblemNumber] = user.PassProblemNumber
@@ -109,7 +110,7 @@ func StructToMap(user UserMsg) (map[string]int, string) {
 	return mp, user.Uid
 }
 
-//MapToStruct Map转结构体, 返回的bool=1为正常，0为map里没有该值
+//MapToStruct Map转结构体, 返回的bool=1为正常，0为map里没有该值，暂时无用
 func MapToStruct(mp map[string]int) (UserMsg, bool) {
 
 	var user UserMsg
