@@ -18,13 +18,9 @@ func TestAtc(t *testing.T) {
 		t.Errorf("Error of atcoder is : %v", err)
 	}
 
-	flag := 0
 	for key, val := range atcTestData {
 		if _, data := atcRes[key]; data == false || atcRes[key] != val {
-			flag = 1
+			t.Errorf("Error of atcoder \n ans is %v \n but output is %v", atcTestData, atcRes)
 		}
-	}
-	if flag == 1 {
-		t.Errorf("Error of atcoder \n ans is %v \n but output is %v", atcTestData, atcRes)
 	}
 }
