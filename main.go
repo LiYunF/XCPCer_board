@@ -4,10 +4,6 @@ import (
 	_ "XCPCer_board/config"
 	"XCPCer_board/dao"
 	_ "XCPCer_board/dao"
-	"XCPCer_board/model"
-	"XCPCer_board/spider/vjudge"
-	"context"
-	"fmt"
 	_ "github.com/FengZhg/go_tools/gin_logrus"
 )
 
