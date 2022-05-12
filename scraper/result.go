@@ -12,6 +12,7 @@ const (
 	maxKVBufferSize = 128
 )
 
+//KV 处理单元返回的键值对
 type KV[V any] struct {
 	Key string
 	Val V
@@ -24,13 +25,14 @@ func (k *KV[V]) GetPersistHandler(cb *PersistHandler[V]) Persist {
 	}
 }
 
-//Processor 数据收集封装
+//Processor 处理单元
 type Processor[V any] struct {
 	c     *colly.Collector
 	ch    chan KV[V]
 	errCh chan error
 }
 
+//NewProcessor 新处理单元
 func NewProcessor[V any](c *colly.Collector, cb func(collector *colly.Collector, res *Processor[V])) *Processor[V] {
 	p := &Processor[V]{
 		errCh: make(chan error, maxKVBufferSize),
@@ -39,6 +41,19 @@ func NewProcessor[V any](c *colly.Collector, cb func(collector *colly.Collector,
 	}
 	cb(c, p)
 	return p
+}
+
+//Set 设置值
+func (r *Processor[V]) Set(key string, value V) {
+	r.ch <- KV[V]{
+		Key: key,
+		Val: value,
+	}
+}
+
+//SetError 设置错误
+func (r *Processor[V]) SetError(err error) {
+	r.errCh <- err
 }
 
 //Collect 收集所有返回结果
@@ -67,17 +82,4 @@ func (r *Processor[V]) Collect(url string) (re []KV[V], err error) {
 		return nil, err
 	}
 	return re, nil
-}
-
-//Set 设置值
-func (r *Processor[V]) Set(key string, value V) {
-	r.ch <- KV[V]{
-		Key: key,
-		Val: value,
-	}
-}
-
-//SetError 设置错误
-func (r *Processor[V]) SetError(err error) {
-	r.errCh <- err
 }
