@@ -1,4 +1,4 @@
-package luogu
+package vjudge
 
 import (
 	"XCPCer_board/dao"
@@ -9,12 +9,11 @@ import (
 )
 
 const (
-	packageName = "luogu"
+	packageName = "vjudge"
 )
 
 //SetUserMsgToRedis 将用户信息放入redis
 func SetUserMsgToRedis(uid string, ctx context.Context) error {
-
 	//get user msg
 	res, err := ScrapeUser(uid)
 	if err != nil {
@@ -38,7 +37,6 @@ func SetUserMsgToRedis(uid string, ctx context.Context) error {
 
 //GetUserMsgFromRedis 获取用户某一keyWord的数据
 func GetUserMsgFromRedis(uid string, keyWord string, ctx context.Context) (int, error) {
-
 	//get data
 	val, err := dao.RedisClient.Get(ctx, getUserIDRedisKey(uid, keyWord)).Result()
 	if err != nil {
