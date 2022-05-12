@@ -28,7 +28,7 @@ func init() {
 }
 
 //contestCallback 处理 contestHistory 的页面回调
-func contestCallback(c *colly.Collector, res *scraper.Results[string]) {
+func contestCallback(c *colly.Collector, res *scraper.Processor[string]) {
 	//用goquery
 	c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]", func(element *colly.HTMLElement) {
 		getContestPage(element)
