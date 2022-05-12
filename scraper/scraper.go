@@ -9,18 +9,13 @@ import (
 // @Date: 2022/4/7 15:44
 
 //Scrape 爬
-func (s *Scraper[V]) Scrape(url string) Results[V] {
-	ch := make(chan Results[V])
-	r := request[V]{
-		Url: url,
-		Ch:  ch,
-	}
-	// 发送任务到处理协程
-	s.ch <- r
+func (s *Scraper[V]) Scrape(url string) ([]KV[V], error) {
 	select {
-	case ret := <-ch:
-		return ret
+	case p := <-s.ch:
+		kvs, err := p.Collect(url)
+		s.ch <- p
+		return kvs, err
 	case <-time.After(s.timeout):
-		return NewResultsWithError[V](model.ScrapeTimeoutError)
+		return nil, model.ScrapeTimeoutError
 	}
 }

@@ -1,10 +1,8 @@
 package scraper
 
 import (
-	"XCPCer_board/model"
 	"fmt"
 	"github.com/gocolly/colly"
-	log "github.com/sirupsen/logrus"
 	"sync"
 	"time"
 )
@@ -16,23 +14,17 @@ var s sync.RWMutex
 
 //Scraper colly封装
 type Scraper[V any] struct {
-	cb      func(collector *colly.Collector, res *Results[V])
-	ch      chan request[V]
+	cb      func(collector *colly.Collector, res *Processor[V])
+	ch      chan *Processor[V]
 	threads uint32
 	timeout time.Duration
-}
-
-//request 传输的请求结构
-type request[V any] struct {
-	Url string
-	Ch  chan Results[V]
 }
 
 //参数丰富接口
 type scraperFunc[V any] func(*Scraper[V])
 
 //WithCallback 带上处理回调函数
-func WithCallback[V any](cb func(collector *colly.Collector, res *Results[V])) scraperFunc[V] {
+func WithCallback[V any](cb func(collector *colly.Collector, res *Processor[V])) scraperFunc[V] {
 	return func(s *Scraper[V]) {
 		s.cb = cb
 	}
@@ -56,8 +48,8 @@ func WithTimeout[V any](timeout time.Duration) scraperFunc[V] {
 }
 
 //defaultCallback 默认的处理回调函数
-func defaultCallback[V any]() func(*colly.Collector, *Results[V]) {
-	return func(c *colly.Collector, res *Results[V]) {
+func defaultCallback[V any]() func(*colly.Collector, *Processor[V]) {
+	return func(c *colly.Collector, res *Processor[V]) {
 		c.OnRequest(func(r *colly.Request) {
 			fmt.Println(r.URL)
 			var v V
@@ -72,7 +64,6 @@ func NewScraper[V any](opts ...scraperFunc[V]) *Scraper[V] {
 	s := Scraper[V]{
 		timeout: 5 * time.Second,
 		threads: 1,
-		ch:      make(chan request[V]),
 		cb:      defaultCallback[V](),
 	}
 	// 应用外来参数
@@ -81,6 +72,7 @@ func NewScraper[V any](opts ...scraperFunc[V]) *Scraper[V] {
 			f(&s)
 		}
 	}
+	s.ch = make(chan *Processor[V], s.threads)
 	// 初始化
 	s.init()
 	return &s
@@ -88,45 +80,23 @@ func NewScraper[V any](opts ...scraperFunc[V]) *Scraper[V] {
 
 //init 初始化
 func (s *Scraper[V]) init() {
+	wg := sync.WaitGroup{}
 	// 初始化各种On
 	for i := uint32(0); i < s.threads; i++ {
-		res := NewResults[V]()
-		c := colly.NewCollector(
-			colly.Async(false),
-			colly.MaxDepth(1),
-			colly.AllowURLRevisit(),
-		)
 		// 初始化并开始监听
-		go s.newThread(c, res)
-	}
-}
-
-//newThread 启动一个监听者
-func (s *Scraper[V]) newThread(collector *colly.Collector, res *Results[V]) {
-	// 初始化on函数
-	s.cb(collector, res)
-	finCh := make(chan struct{})
-	// 开始阻塞监听
-	for p := range s.ch {
-		var err error
+		wg.Add(1)
 		go func() {
-			err = collector.Visit(p.Url)
-			if err != nil {
-				log.Errorf("Scraper Visit Error %v", err)
-				res.SetError(err)
-			}
-			finCh <- struct{}{}
+			defer wg.Done()
+			c := colly.NewCollector(
+				colly.Async(false),
+				colly.MaxDepth(1),
+				colly.AllowURLRevisit(),
+			)
+			p := NewProcessor[V](c, s.cb)
+			s.ch <- p
 		}()
-		// 阻塞等待返回结果
-		select {
-		case <-finCh:
-			break
-		case <-time.After(s.timeout):
-			res.SetError(model.ScrapeTimeoutError)
-		}
-		// 进行结果返回
-		p.Ch <- NewResultsWithMapAndError(res.GetMap(), res.GetError())
-		// 重新初始化结果集
-		res.init()
+		// 启动持久化处理携程
+		go newPersistProcessor()
 	}
+	wg.Wait()
 }
