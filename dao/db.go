@@ -8,23 +8,19 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var DbClient *sql.DB
+var DBClient *sql.DB
 
 const mysqlDriver = "mysql"
 
-//初始化数据库的函数
-func init() {
+//NewDBClient 初始化db连接
+func NewDBClient() (*sql.DB, error) {
 	// 判断是否存在配置
-	mysqlConfig, ok := config.Conf.Storages[mysqlDriver]
-	if !ok {
-		log.Errorf("lack of mysql config")
-		return
-	}
+	mysqlConfig := config.Conf.Storages[mysqlDriver]
 	// 初始化连接
-	var err error
-	DbClient, err = sql.Open(mysqlDriver, fmt.Sprintf("%v:%v@tcp(%v)/", mysqlConfig.Username, mysqlConfig.Password, mysqlConfig.Host))
+	dbClient, err := sql.Open(mysqlDriver, fmt.Sprintf("%v:%v@tcp(%v)/", mysqlConfig.Username, mysqlConfig.Password, mysqlConfig.Host))
 	if err != nil {
 		log.Errorf("Open Sql Error: %v", err)
-		panic(err)
+		return nil, err
 	}
+	return dbClient, nil
 }
