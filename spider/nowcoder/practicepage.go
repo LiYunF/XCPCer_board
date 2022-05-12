@@ -35,11 +35,13 @@ func init() {
 }
 
 //practiceCallback 处理牛客个人练习页面的回调函数
-func practiceCallback(c *colly.Collector, res *scraper.Results[int]) {
+func practiceCallback(c *colly.Collector, res *scraper.Processor[int]) {
 	//用goquery
-	c.OnHTML("html", func(element *colly.HTMLElement) {
-		res.Set(practicePassAmountKey, passAmountHandler(element.DOM))
-	})
+	c.OnHTML(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix .my-state-main",
+		func(element *colly.HTMLElement) {
+			res.Set(practicePassAmountKey, passAmountHandler(element.DOM))
+		},
+	)
 }
 
 //getNowCoderContestProfilePracticeUrl 获取牛客竞赛区个人练习URL
@@ -49,8 +51,7 @@ func getNowCoderContestProfilePracticeUrl(nowCoderId string) string {
 
 //getNowCoderContestBaseFindRule 获取牛客竞赛区基础的
 func getNowCoderContestBaseFindRule(keyWord string) string {
-	return fmt.Sprintf(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix "+
-		".my-state-main .my-state-item:contains(%v) .state-num", keyWord)
+	return fmt.Sprintf(".my-state-item:contains(%v) .state-num", keyWord)
 }
 
 //passAmountHandler 获取竞赛区题目通过数量handler
@@ -67,6 +68,6 @@ func passAmountHandler(doc *goquery.Selection) int {
 //---------------------------------------------------------------------//
 
 //FetchPractice 抓取个人练习页面的所有
-func FetchPractice(uid string) scraper.Results[int] {
+func FetchPractice(uid string) ([]scraper.KV[int], error) {
 	return practiceScraper.Scrape(getNowCoderContestProfilePracticeUrl(uid))
 }
