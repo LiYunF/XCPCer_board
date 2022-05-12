@@ -29,10 +29,12 @@ func init() {
 
 //contestCallback 处理 contestHistory 的页面回调
 func contestCallback(c *colly.Collector, res *scraper.Processor[string]) {
+
 	//用goquery
 	c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]", func(element *colly.HTMLElement) {
 		getContestPage(element)
 	})
+
 	c.OnHTML("tbody tr", func(element *colly.HTMLElement) {
 		str := strconv.Itoa(num)
 		//fmt.Println(str)
@@ -71,6 +73,6 @@ func getAtCoderContestId(e *colly.HTMLElement) string {
 
 //FetchMainPage 抓取比赛主页页面所有比赛ID
 
-func FetchContestPage(page string) scraper.Results[string] {
+func FetchContestPage(page string) ([]scraper.KV[string], error) {
 	return contestScraper.Scrape(getAtCoderPageUrl(page))
 }
