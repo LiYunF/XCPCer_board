@@ -9,7 +9,7 @@ import (
 // @Date: 2022/4/7 15:44
 
 //Scrape 爬
-func (s *Scraper[V]) Scrape(url string) ([]KV[V], error) {
+func (s *Scraper) Scrape(url string) ([]KV, error) {
 	select {
 	case p := <-s.ch:
 		kvs, err := p.collect(url)

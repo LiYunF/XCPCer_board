@@ -9,16 +9,16 @@ import log "github.com/sirupsen/logrus"
 type Persist func() error
 
 //PersistHandler 持久化处理
-type PersistHandler[V any] struct {
-	cb func(string, V) error
+type PersistHandler struct {
+	cb func(string, interface{}) error
 }
 
-func (p *PersistHandler[V]) Do(key string, val V) error {
+func (p *PersistHandler) Do(key string, val interface{}) error {
 	return p.cb(key, val)
 }
 
-func NewPersistHandler[V any](cb func(string, V) error) *PersistHandler[V] {
-	return &PersistHandler[V]{
+func NewPersistHandler(cb func(string, interface{}) error) *PersistHandler {
+	return &PersistHandler{
 		cb: cb,
 	}
 }

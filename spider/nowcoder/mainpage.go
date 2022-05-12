@@ -3,7 +3,6 @@ package nowcoder
 import (
 	"XCPCer_board/scraper"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 	"strconv"
 )
@@ -29,25 +28,32 @@ const (
 )
 
 var (
-	mainScraper *scraper.Scraper[int]
+	mainScraper = scraper.NewScraper(
+		scraper.WithCallback(mainCallback),
+		scraper.WithThreads(2),
+	)
 )
 
-// 初始化
-func init() {
-	mainScraper = scraper.NewScraper[int](
-		scraper.WithCallback(mainCallback),
-		scraper.WithThreads[int](2),
-	)
-}
-
 //mainCallback 处理牛客个人主页的回调函数
-func mainCallback(c *colly.Collector, res *scraper.Processor[int]) {
+func mainCallback(c *colly.Collector, res *scraper.Processor) {
 	//用goquery
 	c.OnHTML(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix .my-state-main",
 		func(element *colly.HTMLElement) {
-			res.Set(mainRatingKey, ratingHandler(element.DOM))
-			res.Set(mainRatingRatingKey, ratingRankingHandler(element.DOM))
-			res.Set(mainAttendContestAmountKey, attendContestAmountHandler(element.DOM))
+			// rating
+			ret := element.DOM.Find(fmt.Sprintf(".my-state-item:contains(%v) .state-num.rate-score5",
+				mainRatingKeyWord)).First().Text()
+			if num, err := strconv.Atoi(ret); err == nil {
+				res.Set(mainRatingKey, num)
+			}
+			// 排名
+			ret = element.DOM.Find(getNowCoderContestBaseFindRule(mainRatingRankingKeyWord)).First().Text()
+			if num, err := strconv.Atoi(ret); err == nil {
+				res.Set(mainRatingRatingKey, num)
+			}
+			ret = element.DOM.Find(getNowCoderContestBaseFindRule(mainAttendContestAmountKeyWord)).First().Text()
+			if num, err := strconv.Atoi(ret); err == nil {
+				res.Set(mainAttendContestAmountKey, num)
+			}
 		},
 	)
 
@@ -58,38 +64,11 @@ func getNowCoderContestProfileBaseUrl(nowCoderId string) string {
 	return "https://ac.nowcoder.com/acm/contest/profile/" + nowCoderId
 }
 
-//ratingHandler 获取竞赛区Rating handler (需要的条件多一个比较特殊)
-func ratingHandler(doc *goquery.Selection) int {
-	ret := doc.Find(fmt.Sprintf(".my-state-item:contains(%v) .state-num.rate-score5", mainRatingKeyWord)).First().Text()
-	if num, err := strconv.Atoi(ret); err == nil {
-		return num
-	}
-	return -1
-}
-
-//ratingRankingHandler 获取竞赛区Rating排名handler
-func ratingRankingHandler(doc *goquery.Selection) int {
-	ret := doc.Find(getNowCoderContestBaseFindRule(mainRatingRankingKeyWord)).First().Text()
-	if num, err := strconv.Atoi(ret); err == nil {
-		return num
-	}
-	return -1
-}
-
-//attendContestAmountHandler 获取竞赛区Rating排名handler
-func attendContestAmountHandler(doc *goquery.Selection) int {
-	ret := doc.Find(getNowCoderContestBaseFindRule(mainAttendContestAmountKeyWord)).First().Text()
-	if num, err := strconv.Atoi(ret); err == nil {
-		return num
-	}
-	return -1
-}
-
 //-------------------------------------------------------------------------------------------//
 // 对外暴露函数
 //-------------------------------------------------------------------------------------------//
 
-//FetchMainPage 抓取个人主页页面所有
-func FetchMainPage(uid string) ([]scraper.KV[int], error) {
+//fetchMainPage 抓取个人主页页面所有
+func fetchMainPage(uid string) ([]scraper.KV, error) {
 	return mainScraper.Scrape(getNowCoderContestProfileBaseUrl(uid))
 }
