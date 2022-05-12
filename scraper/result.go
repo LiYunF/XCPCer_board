@@ -13,30 +13,30 @@ const (
 )
 
 //KV 处理单元返回的键值对
-type KV[V any] struct {
+type KV struct {
 	Key string
-	Val V
+	Val interface{}
 }
 
 //GetPersistHandler 获取持久化处理函数
-func (k *KV[V]) GetPersistHandler(cb *PersistHandler[V]) Persist {
+func (k *KV) GetPersistHandler(cb *PersistHandler) Persist {
 	return func() error {
 		return cb.Do(k.Key, k.Val)
 	}
 }
 
 //Processor 处理单元
-type Processor[V any] struct {
+type Processor struct {
 	c     *colly.Collector
-	ch    chan KV[V]
+	ch    chan KV
 	errCh chan error
 }
 
 //NewProcessor 新处理单元
-func NewProcessor[V any](c *colly.Collector, cb func(collector *colly.Collector, res *Processor[V])) *Processor[V] {
-	p := &Processor[V]{
+func NewProcessor(c *colly.Collector, cb func(collector *colly.Collector, res *Processor)) *Processor {
+	p := &Processor{
 		errCh: make(chan error, maxKVBufferSize),
-		ch:    make(chan KV[V], maxKVBufferSize),
+		ch:    make(chan KV, maxKVBufferSize),
 		c:     c,
 	}
 	cb(c, p)
@@ -44,20 +44,20 @@ func NewProcessor[V any](c *colly.Collector, cb func(collector *colly.Collector,
 }
 
 //Set 设置值
-func (r *Processor[V]) Set(key string, value V) {
-	r.ch <- KV[V]{
+func (r *Processor) Set(key string, value interface{}) {
+	r.ch <- KV{
 		Key: key,
 		Val: value,
 	}
 }
 
 //SetError 设置错误
-func (r *Processor[V]) SetError(err error) {
+func (r *Processor) SetError(err error) {
 	r.errCh <- err
 }
 
 //collect 收集所有返回结果
-func (r *Processor[V]) collect(url string) (re []KV[V], err error) {
+func (r *Processor) collect(url string) (re []KV, err error) {
 	// 等待执行结束
 	err = r.c.Visit(url)
 	if err != nil {
