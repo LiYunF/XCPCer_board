@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "XCPCer_board/config"
+	"XCPCer_board/dao"
 	_ "XCPCer_board/dao"
 	"XCPCer_board/model"
 	"XCPCer_board/spider/vjudge"
@@ -12,9 +13,18 @@ import (
 
 // 主入口函数
 func main() {
-	ctx := context.Background()
-	fmt.Println(vjudge.SetUserMsgToRedis(model.TestVJIdLYF, ctx))
-	fmt.Println(vjudge.GetUserMsgFromRedis(model.TestVJIdLYF, vjudge.UserList[0], ctx))
-	fmt.Println(vjudge.GetUserAllMsgFromRedis(model.TestVJIdLYF, ctx))
-	//fmt.Println(nowcoder.ScrapeAll(model.TestNowCoderIdLYF))
+	
+}
+
+func init() {
+	redisClient, err := dao.NewRedisClient()
+	if err != nil {
+		panic(err)
+	}
+	dbClient, err := dao.NewDBClient()
+	if err != nil {
+		panic(err)
+	}
+	dao.RedisClient = redisClient
+	dao.DBClient = dbClient
 }

@@ -35,7 +35,7 @@ func init() {
 }
 
 //practiceCallback 处理牛客个人练习页面的回调函数
-func practiceCallback(c *colly.Collector, res *scraper.Results[int]) {
+func practiceCallback(c *colly.Collector, res *scraper.Processor[int]) {
 	//用goquery
 	c.OnHTML("html", func(element *colly.HTMLElement) {
 		res.Set(practicePassAmountKey, passAmountHandler(element.DOM))
@@ -67,6 +67,6 @@ func passAmountHandler(doc *goquery.Selection) int {
 //---------------------------------------------------------------------//
 
 //FetchPractice 抓取个人练习页面的所有
-func FetchPractice(uid string) scraper.Results[int] {
+func FetchPractice(uid string) ([]scraper.KV[int], error) {
 	return practiceScraper.Scrape(getNowCoderContestProfilePracticeUrl(uid))
 }
