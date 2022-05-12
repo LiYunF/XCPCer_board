@@ -41,7 +41,7 @@ func init() {
 }
 
 //mainCallback 处理牛客个人主页的回调函数
-func mainCallback(c *colly.Collector, res *scraper.Results[int]) {
+func mainCallback(c *colly.Collector, res *scraper.Processor[int]) {
 	//用goquery
 	c.OnHTML("html", func(element *colly.HTMLElement) {
 		res.Set(mainRatingKey, ratingHandler(element.DOM))
@@ -89,6 +89,6 @@ func attendContestAmountHandler(doc *goquery.Selection) int {
 //-------------------------------------------------------------------------------------------//
 
 //FetchMainPage 抓取个人主页页面所有
-func FetchMainPage(uid string) scraper.Results[int] {
+func FetchMainPage(uid string) ([]scraper.KV[int], error) {
 	return mainScraper.Scrape(getNowCoderContestProfileBaseUrl(uid))
 }
