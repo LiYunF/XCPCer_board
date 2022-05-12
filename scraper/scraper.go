@@ -12,7 +12,7 @@ import (
 func (s *Scraper[V]) Scrape(url string) ([]KV[V], error) {
 	select {
 	case p := <-s.ch:
-		kvs, err := p.Collect(url)
+		kvs, err := p.collect(url)
 		s.ch <- p
 		return kvs, err
 	case <-time.After(s.timeout):

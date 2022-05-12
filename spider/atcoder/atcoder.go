@@ -40,7 +40,6 @@ func ScrapeSubmission(uid string) (map[string]submission, error) {
 	}
 	fmt.Println(len(ans))
 	return ans, err
-
 }
 
 // ScrapeCid 获得contestId

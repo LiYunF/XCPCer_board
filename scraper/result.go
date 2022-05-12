@@ -56,8 +56,8 @@ func (r *Processor[V]) SetError(err error) {
 	r.errCh <- err
 }
 
-//Collect 收集所有返回结果
-func (r *Processor[V]) Collect(url string) (re []KV[V], err error) {
+//collect 收集所有返回结果
+func (r *Processor[V]) collect(url string) (re []KV[V], err error) {
 	// 等待执行结束
 	err = r.c.Visit(url)
 	if err != nil {
