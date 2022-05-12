@@ -51,10 +51,9 @@ func emptyPersistHandler(uid string) func(string, int) error {
 //matchPersistHandlers 匹配持久化函数
 func matchPersistHandlers(uid string, kvs []scraper.KV[int]) []scraper.Persist {
 	var res []scraper.Persist
-	for ind, kv := range kvs {
+	for ind, _ := range kvs {
 		h, ok := persistHandlerMap[kvs[ind].Key]
 		if ok {
-			log.Infof("Get Handler Key %v val %v", kv.Key, kv.Val)
 			res = append(res, kvs[ind].GetPersistHandler(scraper.NewPersistHandler[int](h(uid))))
 		}
 	}
