@@ -10,8 +10,6 @@ import (
 // @Author: Feng
 // @Date: 2022/4/8 17:38
 
-var s sync.RWMutex
-
 //Scraper colly封装
 type Scraper[V any] struct {
 	cb      func(collector *colly.Collector, res *Processor[V])
@@ -63,7 +61,7 @@ func NewScraper[V any](opts ...scraperFunc[V]) *Scraper[V] {
 	// 默认参数
 	s := Scraper[V]{
 		timeout: 5 * time.Second,
-		threads: 1,
+		threads: 5,
 		cb:      defaultCallback[V](),
 	}
 	// 应用外来参数

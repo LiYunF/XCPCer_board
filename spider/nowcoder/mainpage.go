@@ -43,11 +43,13 @@ func init() {
 //mainCallback 处理牛客个人主页的回调函数
 func mainCallback(c *colly.Collector, res *scraper.Processor[int]) {
 	//用goquery
-	c.OnHTML("html", func(element *colly.HTMLElement) {
-		res.Set(mainRatingKey, ratingHandler(element.DOM))
-		res.Set(mainRatingRatingKey, ratingRankingHandler(element.DOM))
-		res.Set(mainAttendContestAmountKey, attendContestAmountHandler(element.DOM))
-	})
+	c.OnHTML(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix .my-state-main",
+		func(element *colly.HTMLElement) {
+			res.Set(mainRatingKey, ratingHandler(element.DOM))
+			res.Set(mainRatingRatingKey, ratingRankingHandler(element.DOM))
+			res.Set(mainAttendContestAmountKey, attendContestAmountHandler(element.DOM))
+		},
+	)
 
 }
 
@@ -58,8 +60,7 @@ func getNowCoderContestProfileBaseUrl(nowCoderId string) string {
 
 //ratingHandler 获取竞赛区Rating handler (需要的条件多一个比较特殊)
 func ratingHandler(doc *goquery.Selection) int {
-	ret := doc.Find(fmt.Sprintf(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix "+
-		".my-state-main .my-state-item:contains(%v) .state-num.rate-score5", mainRatingKeyWord)).First().Text()
+	ret := doc.Find(fmt.Sprintf(".my-state-item:contains(%v) .state-num.rate-score5", mainRatingKeyWord)).First().Text()
 	if num, err := strconv.Atoi(ret); err == nil {
 		return num
 	}
