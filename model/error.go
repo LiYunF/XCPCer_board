@@ -15,5 +15,5 @@ var (
 	HTTPResponseStatusError = errs.NewError(errorHTTPResponseStatus, "HTTP请求相应状态错误")
 	ScrapeTimeoutError      = errs.NewError(errorScrapeTimeout, "处理调度超时")
 	ScrapeCallTypeError     = errs.NewError(errorScrapeCallType, "scrape类型错误")
-	ConfigNotFoundError     = errs.NewError(errorConfigNotFound, "")
+	ConfigNotFoundError     = errs.NewError(errorConfigNotFound, "配置文件缺失")
 )
