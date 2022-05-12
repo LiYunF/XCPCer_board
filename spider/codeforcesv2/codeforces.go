@@ -59,9 +59,7 @@ func GetStrMsg(uid string) scraper.Results[Submission] {
 
 // GetStrMsgWithKey with key and secret
 func GetStrMsgWithKey(uid string, key string, secret string) scraper.Results[Submission] {
-	return intScraper.Scrape(statusWithKey(uid,
-		key,
-		secret))
+	return intScraper.Scrape(statusWithKey(uid, key, secret))
 
 }
 
