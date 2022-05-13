@@ -9,12 +9,14 @@ var (
 	// 爬取函数
 	fetchers = []func(uid string) ([]scraper.KV, error){
 		fetchMainPage,
+		fetchConPage,
 	}
 	// 匹配持久化处理函数
 	persistHandlerMap = map[string]func(uid string) func(string, interface{}) error{
-		RatingKey:     numProfilePersistHandler,
-		contestSumKey: numProfilePersistHandler,
-		rankKey:       numProfilePersistHandler,
+		RatingKey:     profilePersistHandler,
+		contestSumKey: profilePersistHandler,
+		rankKey:       profilePersistHandler,
+		submissionKey: submissionPersistHandler,
 	}
 )
 
@@ -33,12 +35,22 @@ func scrape(uid string) (res []scraper.KV) {
 	return res
 }
 
-//emptyPersistHandler 空持久化函数
-func numProfilePersistHandler(uid string) func(string, interface{}) error {
+//profilePersistHandler 个人主页持久化函数
+func profilePersistHandler(uid string) func(string, interface{}) error {
 	return func(key string, val interface{}) error {
 		//dao.RedisClient.Set()
 		//dao.DBClient.ExecContext()
-		log.Infof("Nowcoder uid :%v Key %v Val %v", uid, key, val)
+		log.Infof("atcoder uid :%v Key %v Val %v", uid, key, val)
+		return nil
+	}
+}
+
+//submissionPersistHandler 提交信息持久化函数
+func submissionPersistHandler(uid string) func(string, interface{}) error {
+	return func(key string, val interface{}) error {
+		//dao.RedisClient.Set()
+		//dao.DBClient.ExecContext()
+		log.Infof("atcoder uid :%v Key %v Val %v", uid, key, val)
 		return nil
 	}
 }
