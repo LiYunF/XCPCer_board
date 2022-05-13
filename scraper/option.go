@@ -86,7 +86,6 @@ func (s *Scraper) init() {
 			defer wg.Done()
 			c := colly.NewCollector(
 				colly.Async(false),
-				colly.MaxDepth(1),
 				colly.AllowURLRevisit(),
 			)
 			p := NewProcessor(c, s.cb)
