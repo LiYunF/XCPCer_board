@@ -20,7 +20,7 @@ var (
 	}
 )
 
-//scrape 拉取牛客的所有结果
+//scrape 拉取atCoder的所有结果
 func scrape(uid string) (res []scraper.KV) {
 	// 请求所有
 	for _, f := range fetchers {
@@ -45,7 +45,7 @@ func profilePersistHandler(uid string) func(string, interface{}) error {
 	}
 }
 
-//submissionPersistHandler 提交信息持久化函数
+//submissionPersistHandler submission持久化函数
 func submissionPersistHandler(uid string) func(string, interface{}) error {
 	return func(key string, val interface{}) error {
 		//dao.RedisClient.Set()
@@ -67,7 +67,7 @@ func matchPersistHandlers(uid string, kvs []scraper.KV) []scraper.Persist {
 	return res
 }
 
-//Flush 刷新某用户牛客id信息
+//Flush 刷新atCoder某用户信息
 func Flush(uid string) {
 	// 拉出所有kv对
 	kvs := scrape(uid)

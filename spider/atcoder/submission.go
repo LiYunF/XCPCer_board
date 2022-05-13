@@ -42,7 +42,7 @@ func subCallback(c *colly.Collector, res *scraper.Processor) {
 			//提交编号
 			SMid := strings.Split(element.ChildAttr("td:nth-child(10) a", "href"), "/")[4]
 			if errSc != nil {
-				log.Errorf("subpage Fetcher Error %v", errSc)
+				log.Errorf("Submission Score Fetcher Error %v", errSc)
 			}
 			res.Set(submissionKey, submission{userId, SMid, contestId, task, score})
 		})

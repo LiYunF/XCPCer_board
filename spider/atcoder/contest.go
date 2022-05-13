@@ -24,8 +24,6 @@ var (
 
 //conCallback 处理比赛列表的回调函数
 func conCallback(c *colly.Collector, res *scraper.Processor) {
-	//用goquery
-
 	//获取contest页数
 	if pageSums == 1 {
 		c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]",

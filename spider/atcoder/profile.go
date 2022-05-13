@@ -32,7 +32,6 @@ var (
 
 //mainCallback 处理个人主页的回调函数
 func mainCallback(c *colly.Collector, res *scraper.Processor) {
-	//用goquery
 	c.OnHTML("table[class=\"dl-table mt-2\"] tbody",
 		func(element *colly.HTMLElement) {
 			// 获取rating
