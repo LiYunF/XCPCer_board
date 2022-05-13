@@ -21,12 +21,15 @@ var (
 )
 
 var (
-	pageSums = 0
-	num      = 1
+	contestId string
+	userId    string
+	pageSums  = 0
+	num       = 1
+	//subRes       []func(contestId,userId) ([]scraper.KV, error)
 )
 
-//mainCallback 处理牛客个人主页的回调函数
-func subCallback(c *colly.Collector, res *scraper.Processor) {
+//conCallback 处理比赛列表的回调函数
+func conCallback(c *colly.Collector, res *scraper.Processor) {
 	//用goquery
 	if pageSums == 0 {
 		c.OnHTML("ul[class=\"pagination pagination-sm mt-0 mb-1\"]",
@@ -40,15 +43,25 @@ func subCallback(c *colly.Collector, res *scraper.Processor) {
 	}
 	c.OnHTML("tbody tr",
 		func(element *colly.HTMLElement) {
-			cId := element.ChildAttr("td:nth-child(2) a", "href")
-			cId = strings.Split(cId, "/")[2]
-			
+			cId := strings.Split(element.ChildAttr("td:nth-child(2) a", "href"), "/")[2]
+			contestId = cId
+			//ret,err:=fetchSubPage(userId,contestId)
+			//if err == nil {append(res,ret...)}
 		},
 	)
-
 }
 
 //getAtCoderPageUrl 获取 userID
 func getAtCoderPageUrl(page string) string {
 	return "https://atcoder.jp/contests/archive?page=" + page
+}
+
+//-------------------------------------------------------------------------------------------//
+// 对外暴露函数
+//-------------------------------------------------------------------------------------------//
+
+//fetchMainPage 抓取个人主页页面所有
+func fetchConPage(uid string) ([]scraper.KV, error) {
+	userId = uid
+	return mainScraper.Scrape(getAtCoderBaseUrl(uid))
 }

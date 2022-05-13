@@ -39,19 +39,19 @@ func mainCallback(c *colly.Collector, res *scraper.Processor) {
 			retRating := element.DOM.Find(fmt.Sprintf("tr:nth-child(2) span:first-child")).First().Text()
 			if num, err := strconv.Atoi(retRating); err == nil {
 				res.Set(RatingKey, num)
-				//fmt.Println(RatingKey, num)
+				fmt.Println(RatingKey, num)
 			}
 			// 获取Rank
 			retRank := strings.Split(element.DOM.Find(fmt.Sprintf("tr:nth-child(1) td")).First().Text(), "th")[0]
 			if num, err := strconv.Atoi(retRank); err == nil {
 				res.Set(rankKey, num)
-				//fmt.Println(rankKey, num)
+				fmt.Println(rankKey, num)
 			}
 			// 获取rating比赛场数
 			retConSum := element.DOM.Find(fmt.Sprintf("tr:nth-child(4) td")).First().Text()
 			if num, err := strconv.Atoi(retConSum); err == nil {
 				res.Set(contestSumKey, num)
-				//fmt.Println(contestSumKey, num)
+				fmt.Println(contestSumKey, num)
 			}
 		},
 	)
