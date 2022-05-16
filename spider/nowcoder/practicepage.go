@@ -4,6 +4,7 @@ import (
 	"XCPCer_board/scraper"
 	"fmt"
 	"github.com/gocolly/colly"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 )
 
@@ -16,10 +17,10 @@ import (
 // 牛客finder存储Key
 const (
 	// 个人练习页面
-	practicePassAmountKey = "problem pass amount"
+	passAmountKey = "nowcoder_pass_amount"
 
 	// 个人练习selector关键字
-	practicePassAmountKeyWord = "题已通过"
+	passAmountKeyWord = "题已通过"
 )
 
 var (
@@ -33,18 +34,20 @@ func practiceCallback(c *colly.Collector, res *scraper.Processor) {
 	//用goquery
 	c.OnHTML(".nk-container.acm-container .nk-container .nk-main.with-profile-menu.clearfix .my-state-main",
 		func(element *colly.HTMLElement) {
+			uid := element.Request.Ctx.Get("uid")
 			// 题目通过数量
-			ret := element.DOM.Find(getNowCoderContestBaseFindRule(practicePassAmountKeyWord)).First().Text()
-			if num, err := strconv.Atoi(ret); err == nil {
-				res.Set(practicePassAmountKey, num)
+			num, err := strconv.Atoi(element.DOM.Find(getNowCoderContestBaseFindRule(passAmountKeyWord)).First().Text())
+			if err != nil {
+				log.Errorf("str atoi Error %v", err)
 			}
+			res.Set(getPassAmountKey(uid), num)
 		},
 	)
 }
 
-//getNowCoderContestProfilePracticeUrl 获取牛客竞赛区个人练习URL
-func getNowCoderContestProfilePracticeUrl(nowCoderId string) string {
-	return getNowCoderContestProfileBaseUrl(nowCoderId) + "/practice-coding"
+//getContestPracticeUrl 获取牛客竞赛区个人练习URL
+func getContestPracticeUrl(nowCoderId string) string {
+	return getContestProfileUrl(nowCoderId) + "/practice-coding"
 }
 
 //getNowCoderContestBaseFindRule 获取牛客竞赛区基础的
@@ -58,5 +61,14 @@ func getNowCoderContestBaseFindRule(keyWord string) string {
 
 //fetchPractice 抓取个人练习页面的所有
 func fetchPractice(uid string) ([]scraper.KV, error) {
-	return practiceScraper.Scrape(getNowCoderContestProfilePracticeUrl(uid))
+	return practiceScraper.Scrape(func(c *colly.Collector) error {
+		ctx := colly.NewContext()
+		ctx.Put("uid", uid)
+		err := c.Request("GET", getContestPracticeUrl(uid), nil, ctx, nil)
+		if err != nil {
+			log.Errorf("scraper error %v", err)
+			return err
+		}
+		return nil
+	})
 }
