@@ -48,24 +48,10 @@ func emptyPersistHandler(uid string) func(string, interface{}) error {
 	}
 }
 
-//matchPersistHandlers 匹配持久化函数
-func matchPersistHandlers(uid string, kvs []scraper.KV) []scraper.Persist {
-	var res []scraper.Persist
-	for ind, _ := range kvs {
-		h, ok := persistHandlerMap[kvs[ind].Key]
-		if ok {
-			res = append(res, kvs[ind].GetPersistHandler(scraper.NewPersistHandler(h(uid))))
-		}
-	}
-	return res
-}
-
 //Flush 刷新某用户牛客id信息
 func Flush(uid string) {
 	// 拉出所有kv对
 	kvs := scrape(uid)
-	// 为所有key对匹配持久化函数
-	persists := matchPersistHandlers(uid, kvs)
 	// 向持久化处理协程注册持久化处理函数
-	scraper.RegisterPersist(persists...)
+	scraper.FlushRedis(kvs)
 }
