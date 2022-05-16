@@ -14,13 +14,6 @@ var (
 		fetchMainPage,
 		fetchPractice,
 	}
-	// 匹配持久化处理函数
-	persistHandlerMap = map[string]func(uid string) func(string, interface{}) error{
-		mainRatingKey:              emptyPersistHandler,
-		mainRatingRatingKey:        emptyPersistHandler,
-		mainAttendContestAmountKey: emptyPersistHandler,
-		practicePassAmountKey:      emptyPersistHandler,
-	}
 )
 
 //scrape 拉取牛客的所有结果
@@ -36,16 +29,6 @@ func scrape(uid string) (res []scraper.KV) {
 		res = append(res, kvs...)
 	}
 	return res
-}
-
-//emptyPersistHandler 空持久化函数
-func emptyPersistHandler(uid string) func(string, interface{}) error {
-	return func(key string, val interface{}) error {
-		//dao.RedisClient.Set()
-		//dao.DBClient.ExecContext()
-		log.Infof("Nowcoder uid :%v Key %v Val %v", uid, key, val)
-		return nil
-	}
 }
 
 //Flush 刷新某用户牛客id信息

@@ -2,7 +2,6 @@ package scraper
 
 import (
 	"github.com/gocolly/colly"
-	log "github.com/sirupsen/logrus"
 )
 
 // @Author: Feng
@@ -20,17 +19,15 @@ type KV struct {
 
 //Processor 处理单元
 type Processor struct {
-	c     *colly.Collector
-	ch    chan KV
-	errCh chan error
+	c  *colly.Collector
+	ch chan KV
 }
 
 //NewProcessor 新处理单元
 func NewProcessor(c *colly.Collector, cb func(collector *colly.Collector, res *Processor)) *Processor {
 	p := &Processor{
-		errCh: make(chan error, maxKVBufferSize),
-		ch:    make(chan KV, maxKVBufferSize),
-		c:     c,
+		ch: make(chan KV, maxKVBufferSize),
+		c:  c,
 	}
 	cb(c, p)
 	return p
@@ -42,39 +39,4 @@ func (r *Processor) Set(key string, value interface{}) {
 		Key: key,
 		Val: value,
 	}
-}
-
-//SetError 设置错误
-func (r *Processor) SetError(err error) {
-	if err != nil {
-		r.errCh <- err
-	}
-}
-
-//collect 收集所有返回结果
-func (r *Processor) collect(url string) (re []KV, err error) {
-	// 等待执行结束
-	err = r.c.Visit(url)
-	if err != nil {
-		log.Errorf("Scraper Error %v", err)
-		return nil, err
-	}
-	fin := false
-	for {
-		select {
-		case kv := <-r.ch:
-			re = append(re, kv)
-		case err1 := <-r.errCh:
-			err = err1
-		default:
-			fin = true
-		}
-		if fin {
-			break
-		}
-	}
-	if err != nil {
-		return nil, err
-	}
-	return re, nil
 }
