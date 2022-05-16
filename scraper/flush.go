@@ -3,7 +3,6 @@ package scraper
 import (
 	"XCPCer_board/dao"
 	"context"
-	"database/sql"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -20,7 +19,8 @@ type redisRequest struct {
 }
 
 type dbRequest struct {
-	do func(cli *sql.DB) error
+	query string
+	args  []interface{}
 }
 
 //newFlushProcessor 新持久化处理器
@@ -38,20 +38,19 @@ func newFlushProcessor() {
 
 //internalFlushRedis 内部刷新redis数据
 func internalFlushRedis(req *redisRequest) {
-	var args []interface{}
 	for _, kv := range req.kvs {
-		args = append(args, kv.Key, kv.Val)
+		// 底层库实现了自动重试
+		err := dao.RedisClient.Set(context.Background(), kv.Key, kv.Val, 0).Err()
+		if err != nil {
+			log.Errorf("internal flush redis error %v", err)
+		}
 	}
-	// 底层库实现了自动重试
-	err := dao.RedisClient.MSet(context.Background(), args...).Err()
-	if err != nil {
-		log.Errorf("internal flush redis error %v", err)
-	}
+
 }
 
 //internalFlushDB 内部刷新db内数据
 func internalFlushDB(req *dbRequest) {
-	err := req.do(dao.DBClient)
+	_, err := dao.DBClient.Exec(req.query, req.args...)
 	if err != nil {
 		log.Errorf("internal flush db error %v", err)
 	}
@@ -65,8 +64,9 @@ func FlushRedis(kvs []KV) {
 }
 
 //FlushDB 刷新DB
-func FlushDB(callback func(cli *sql.DB) error) error {
+func FlushDB(query string, args ...interface{}) {
 	flushCh <- dbRequest{
-		do: callback,
+		query: query,
+		args:  args,
 	}
 }
