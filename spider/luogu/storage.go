@@ -80,6 +80,7 @@ func GetUserAllMsgFromRedis(uid string, ctx context.Context) (map[string]int, er
 	return mp, nil
 }
 
+//getUserIDRedisKey 获取redis的key
 func getUserIDRedisKey(uid string, key any) string {
 	return fmt.Sprintf("%v_id_%v_%v", packageName, uid, key)
 }
