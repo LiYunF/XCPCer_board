@@ -10,27 +10,21 @@ import (
 //---------------------------------------------------------------------//
 
 var (
-	intScraper *scraper.Scraper[int]
-)
-
-func init() {
-	intScraper = scraper.NewScraper[int](
+	intScraper = scraper.NewScraper(
 		scraper.WithCallback(intCallback),
 		scraper.WithThreads[int](2),
 	)
-}
+)
 
-func intCallback(c *colly.Collector, res *scraper.Results[int]) {
+func intCallback(c *colly.Collector, res *scraper.Processor) {
 	c.OnHTML("#body", func(e *colly.HTMLElement) {
 		//fmt.Println(r.DOM.First().Text())
 		res.Set(problemPassAmountKey, strToInt(e.DOM, problemPassAmountHandler))
 		res.Set(lastMonthPassAmount, strToInt(e.DOM, lastMonthAmountHandler))
-		res.Set(ratingKey, strToInt(e.DOM, ratingHandler))
-		res.Set(maxRatingKey, strToInt(e.DOM, maxRatingHandler))
 	})
 }
 
 //GetIntMsg 对外暴露函数，获取int信息
-func GetIntMsg(uid string) scraper.Results[int] {
+func GetIntMsg(uid string) ([]scraper.KV, error) {
 	return intScraper.Scrape(getPersonPage(uid))
 }

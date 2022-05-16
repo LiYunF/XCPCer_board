@@ -4,6 +4,7 @@ import (
 	"XCPCer_board/scraper"
 	"fmt"
 	"github.com/gocolly/colly"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 )
 
@@ -17,9 +18,9 @@ import (
 // 牛客finder存储Key
 const (
 	// 个人主页
-	mainRatingKey              = "NowCoder_Main_Rating"
-	mainRatingRatingKey        = "NowCoder_Main_RatingRanking"
-	mainAttendContestAmountKey = "NowCoder_Main_AttendContestAmount"
+	mainRatingKey              = "rating"
+	mainRatingRatingKey        = "rating ranking"
+	mainAttendContestAmountKey = "attend contest amount"
 
 	// 个人主页selector关键字
 	mainRatingKeyWord              = "Rating"
@@ -42,18 +43,25 @@ func mainCallback(c *colly.Collector, res *scraper.Processor) {
 			// rating
 			ret := element.DOM.Find(fmt.Sprintf(".my-state-item:contains(%v) .state-num.rate-score5",
 				mainRatingKeyWord)).First().Text()
-			if num, err := strconv.Atoi(ret); err == nil {
-				res.Set(mainRatingKey, num)
+			num, err := strconv.Atoi(ret)
+			if err != nil {
+				log.Errorf("str atoi Error %v", err)
 			}
+			res.Set(mainRatingKey, num)
 			// 排名
 			ret = element.DOM.Find(getNowCoderContestBaseFindRule(mainRatingRankingKeyWord)).First().Text()
-			if num, err := strconv.Atoi(ret); err == nil {
-				res.Set(mainRatingRatingKey, num)
+			num, err = strconv.Atoi(ret)
+			if err != nil {
+				log.Errorf("str atoi Error %v", err)
 			}
+			res.Set(mainRatingRatingKey, num)
+			// 过题数
 			ret = element.DOM.Find(getNowCoderContestBaseFindRule(mainAttendContestAmountKeyWord)).First().Text()
-			if num, err := strconv.Atoi(ret); err == nil {
-				res.Set(mainAttendContestAmountKey, num)
+			num, err = strconv.Atoi(ret)
+			if err != nil {
+				log.Errorf("str atoi Error %v", err)
 			}
+			res.Set(mainAttendContestAmountKey, num)
 		},
 	)
 
