@@ -18,13 +18,6 @@ type KV struct {
 	Val interface{}
 }
 
-//GetPersistHandler 获取持久化处理函数
-func (k *KV) GetPersistHandler(cb *PersistHandler) Persist {
-	return func() error {
-		return cb.Do(k.Key, k.Val)
-	}
-}
-
 //Processor 处理单元
 type Processor struct {
 	c     *colly.Collector
@@ -53,7 +46,9 @@ func (r *Processor) Set(key string, value interface{}) {
 
 //SetError 设置错误
 func (r *Processor) SetError(err error) {
-	r.errCh <- err
+	if err != nil {
+		r.errCh <- err
+	}
 }
 
 //collect 收集所有返回结果

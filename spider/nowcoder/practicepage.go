@@ -16,7 +16,7 @@ import (
 // 牛客finder存储Key
 const (
 	// 个人练习页面
-	practicePassAmountKey = "NowCoder_Practice_PassAmount"
+	practicePassAmountKey = "problem pass amount"
 
 	// 个人练习selector关键字
 	practicePassAmountKeyWord = "题已通过"

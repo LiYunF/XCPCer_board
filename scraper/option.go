@@ -92,7 +92,7 @@ func (s *Scraper) init() {
 			s.ch <- p
 		}()
 		// 启动持久化处理携程
-		go newPersistProcessor()
+		go newFlushProcessor()
 	}
 	wg.Wait()
 }
