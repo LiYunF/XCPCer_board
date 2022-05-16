@@ -3,6 +3,7 @@ package scraper
 import (
 	"XCPCer_board/dao"
 	"context"
+	"database/sql"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,8 +20,7 @@ type redisRequest struct {
 }
 
 type dbRequest struct {
-	query string
-	args  []interface{}
+	do func(cli *sql.DB) error
 }
 
 //newFlushProcessor 新持久化处理器
@@ -51,7 +51,7 @@ func internalFlushRedis(req *redisRequest) {
 
 //internalFlushDB 内部刷新db内数据
 func internalFlushDB(req *dbRequest) {
-	_, err := dao.DBClient.Exec(req.query, req.args...)
+	err := req.do(dao.DBClient)
 	if err != nil {
 		log.Errorf("internal flush db error %v", err)
 	}
@@ -65,9 +65,8 @@ func FlushRedis(kvs []KV) {
 }
 
 //FlushDB 刷新DB
-func FlushDB(query string, args ...interface{}) {
+func FlushDB(callback func(cli *sql.DB) error) error {
 	flushCh <- dbRequest{
-		query: query,
-		args:  args,
+		do: callback,
 	}
 }
