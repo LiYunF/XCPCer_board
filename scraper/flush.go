@@ -38,15 +38,14 @@ func newFlushProcessor() {
 
 //internalFlushRedis 内部刷新redis数据
 func internalFlushRedis(req *redisRequest) {
-	var args []interface{}
 	for _, kv := range req.kvs {
-		args = append(args, kv.Key, kv.Val)
+		// 底层库实现了自动重试
+		err := dao.RedisClient.Set(context.Background(), kv.Key, kv.Val, 0).Err()
+		if err != nil {
+			log.Errorf("internal flush redis error %v", err)
+		}
 	}
-	// 底层库实现了自动重试
-	err := dao.RedisClient.MSet(context.Background(), args...).Err()
-	if err != nil {
-		log.Errorf("internal flush redis error %v", err)
-	}
+
 }
 
 //internalFlushDB 内部刷新db内数据
